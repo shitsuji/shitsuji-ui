@@ -1,6 +1,8 @@
+// @flow
 import React from 'react';
 import { List, Segment } from 'semantic-ui-react';
 import styled from 'styled-components';
+import { Application } from '../models';
 
 const ApplicationsListItem = styled(List.Item)`
   padding: 1rem 0 !important;
@@ -14,28 +16,25 @@ const ApplicationsListItem = styled(List.Item)`
   }
 `;
 
-export function ApplicationsList(props) {
+export interface ApplicationsListProps {
+  applications: Application[];
+}
+
+export function ApplicationsList(props: ApplicationsListProps) {
+  const applications = props.applications || [];
+
+  const items = applications.map((app) => (
+    <ApplicationsListItem key={app.key}>
+      <List.Content>
+        <List.Header>{app.name}</List.Header>
+      </List.Content>
+    </ApplicationsListItem>
+  ));
+  
   return (
     <Segment>
       <List divided relaxed>
-        <ApplicationsListItem>
-          <List.Content>
-            <List.Header>Snickerdoodle</List.Header>
-            An excellent companion
-          </List.Content>
-        </ApplicationsListItem>
-        <ApplicationsListItem>
-          <List.Content>
-            <List.Header>Poodle</List.Header>
-            A poodle, its pretty basic
-          </List.Content>
-        </ApplicationsListItem>
-        <ApplicationsListItem>
-          <List.Content>
-            <List.Header>Paulo</List.Header>
-            He's also a dog
-          </List.Content>
-        </ApplicationsListItem>
+        {items}
       </List>
     </Segment>
   );

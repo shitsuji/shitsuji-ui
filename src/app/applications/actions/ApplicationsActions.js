@@ -22,4 +22,4 @@ export interface LoadApplicationsFailureAction extends Action {
   payload: null;
 }
 
-export const loadApplications = actionCreator(LOAD_APPLICATIONS_FAILURE);
+export const loadApplicationsFailure = actionCreator(LOAD_APPLICATIONS_FAILURE);
