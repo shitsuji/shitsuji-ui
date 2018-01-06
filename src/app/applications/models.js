@@ -1,9 +1,12 @@
 // @flow
 
-export interface Application {
-  createdAt: Date;
+export interface ApplicationCreateData {
   name: string;
   key: string;
+}
+
+export interface Application extends ApplicationCreateData {
+  createdAt: Date;
   isGenerated: boolean;
   isLegacy: boolean;
   repository: any;

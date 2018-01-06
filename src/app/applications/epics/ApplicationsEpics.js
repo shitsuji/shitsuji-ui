@@ -6,7 +6,11 @@ import {
   LOAD_APPLICATIONS_REQUEST,
   LoadApplicationsRequestAction,
   loadApplicationsSuccess,
-  loadApplicationsFailure
+  loadApplicationsFailure,
+  CREATE_APPLICATION_REQUEST,
+  CreateApplicationRequestAction,
+  createApplicationSuccess,
+  createApplicationFailure
 } from '../actions';
 import { catchError, exhaustMap, map } from 'rxjs/operators';
 import { ajax } from 'rxjs/observable/dom/ajax';
@@ -20,6 +24,17 @@ export function loadApplicationsEpic(action$: Observable<Action>, store: Store, 
     exhaustMap((payload) => ajax.getJSON(`${BASE_URL}/applications`).pipe(
       map((res) => loadApplicationsSuccess(res)),
       catchError((err) => of(loadApplicationsFailure(err)))
+    ))
+  );
+}
+
+export function createApplicationEpic(action$: Observable<Action>, store: Store, deps: {}) {
+  return action$.pipe(
+    ofType(CREATE_APPLICATION_REQUEST),
+    map((action: CreateApplicationRequestAction) => action.payload),
+    exhaustMap((payload) => ajax.post(`${BASE_URL}/applications`, payload).pipe(
+      map((res) => createApplicationSuccess(res)),
+      catchError((err) => of(createApplicationFailure(err)))
     ))
   );
 }

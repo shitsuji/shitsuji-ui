@@ -16,12 +16,25 @@ const ApplicationsListItem = styled(List.Item)`
   }
 `;
 
+const EmptySegment = styled(Segment)`
+  text-align: center;
+  color: grey;
+`;
+
 export interface ApplicationsListProps {
   applications: Application[];
 }
 
 export function ApplicationsList(props: ApplicationsListProps) {
   const applications = props.applications || [];
+
+  if (applications.length < 1) {
+    return (
+      <EmptySegment>
+        No apps here, try adding new one :)
+      </EmptySegment>
+    );
+  }
 
   const items = applications.map((app) => (
     <ApplicationsListItem key={app.key}>

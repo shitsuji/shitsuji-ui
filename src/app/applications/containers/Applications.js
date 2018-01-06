@@ -5,7 +5,11 @@ import { ApplicationsListWithLoader } from '../components';
 import { RootState } from '../../models';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { loadApplicationsRequest, ApplicationsState } from '../index';
+import { ApplicationsState } from '../models';
+import { loadApplicationsRequest } from '../actions';
+import { Grid, Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { CREATE_APPLICATION_PATH } from '../constants';
 
 function mapStateToProps({ applications }: RootState) {
   return applications;
@@ -29,6 +33,13 @@ export const Applications = connect(mapStateToProps, mapDispatchToProps)(
       const { applications, pending } = this.props;
       return (
         <Layout>
+          <Grid columns="1">
+            <Grid.Column textAlign="left">
+              <Button as={Link} to={CREATE_APPLICATION_PATH}>
+                Create application
+              </Button>
+            </Grid.Column>
+          </Grid>
           <ApplicationsListWithLoader applications={applications} pending={pending} />
         </Layout>
       );
