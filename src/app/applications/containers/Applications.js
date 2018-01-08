@@ -7,7 +7,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { ApplicationsState } from '../models';
 import { loadApplicationsRequest } from '../actions';
-import { Grid, Button } from 'semantic-ui-react';
+import { Grid, Button, Input, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { CREATE_APPLICATION_PATH } from '../constants';
 
@@ -33,11 +33,16 @@ export const Applications = connect(mapStateToProps, mapDispatchToProps)(
       const { applications, pending } = this.props;
       return (
         <Layout>
-          <Grid columns="1">
+          <Grid columns="2">
             <Grid.Column textAlign="left">
-              <Button as={Link} to={CREATE_APPLICATION_PATH}>
+              <Button as={Link} to={CREATE_APPLICATION_PATH} icon labelPosition="left">
+                <Icon name="plus" />
                 Create application
               </Button>
+            </Grid.Column>
+
+            <Grid.Column textAlign="right">
+              <Input loading={pending} icon="search" iconPosition="left" placeholder="Search..." />
             </Grid.Column>
           </Grid>
           <ApplicationsListWithLoader applications={applications} pending={pending} />

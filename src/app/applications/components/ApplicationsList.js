@@ -4,18 +4,6 @@ import { List, Segment } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { Application } from '../models';
 
-const ApplicationsListItem = styled(List.Item)`
-  padding: 1rem 0 !important;
-
-  &:first-child {
-    padding: 0 0 1rem 0 !important;
-  }
-  
-  &:last-child {
-    padding: 1rem 0 0 0 !important;
-  }
-`;
-
 const EmptySegment = styled(Segment)`
   text-align: center;
   color: grey;
@@ -37,11 +25,11 @@ export function ApplicationsList(props: ApplicationsListProps) {
   }
 
   const items = applications.map((app) => (
-    <ApplicationsListItem key={app.key}>
+    <List.Item key={app.key}>
       <List.Content>
         <List.Header>{app.name}</List.Header>
       </List.Content>
-    </ApplicationsListItem>
+    </List.Item>
   ));
   
   return (

@@ -7,7 +7,9 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { ApplicationsState, ApplicationCreateData } from '../models';
 import { createApplicationRequest } from '../actions';
-import { Segment, Header } from 'semantic-ui-react';
+import { Segment, Header, Grid, Button, Icon } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { APPLICATIONS_PATH } from '../index';
 
 function mapStateToProps({ applications }: RootState) {
   return applications;
@@ -26,6 +28,15 @@ export const CreateApplication = connect(mapStateToProps, mapDispatchToProps)(
     render() {
       return (
         <Layout>
+          <Grid columns="1">
+            <Grid.Column>
+              <Button as={Link} to={APPLICATIONS_PATH} icon labelPosition="left">
+                <Icon name="chevron left" />
+                Go back
+              </Button>
+            </Grid.Column>
+          </Grid>
+
           <Segment>
             <Header>
               Create new application
