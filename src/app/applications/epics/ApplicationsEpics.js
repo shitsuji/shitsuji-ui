@@ -21,7 +21,7 @@ export function loadApplicationsEpic(action$: Observable<Action>, store: Store, 
   return action$.pipe(
     ofType(LOAD_APPLICATIONS_REQUEST),
     map((action: LoadApplicationsRequestAction) => action.payload),
-    exhaustMap((payload) => ajax.getJSON(`${BASE_URL}/applications`).pipe(
+    exhaustMap((payload) => ajax.getJSON(`${BASE_URL}/applications${payload.search ? '?search=' +  payload.search : ''}`).pipe(
       map((res) => loadApplicationsSuccess(res)),
       catchError((err) => of(loadApplicationsFailure(err)))
     ))

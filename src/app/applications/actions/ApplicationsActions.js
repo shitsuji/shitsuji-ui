@@ -8,10 +8,10 @@ export const LOAD_APPLICATIONS_SUCCESS = 'LOAD_APPLICATIONS_SUCCESS';
 export const LOAD_APPLICATIONS_FAILURE = 'LOAD_APPLICATIONS_FAILURE';
 export const CREATE_APPLICATION_REQUEST = 'CREATE_APPLICATION_REQUEST';
 export const CREATE_APPLICATION_SUCCESS = 'CREATE_APPLICATION_SUCCESS';
-export const CREATE_APPLICATION_FAILURE = 'CREATE_APPLICATION_FAILURE';
+export const CREATE_APPLICATION_FAILURE = 'CREATE_APPLICATION_FAILURE';      
 
 export interface LoadApplicationsRequestAction extends Action {
-  payload: null;
+  payload: { search: string };
 }
 
 export const loadApplicationsRequest = actionCreator(LOAD_APPLICATIONS_REQUEST);

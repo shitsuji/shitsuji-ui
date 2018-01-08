@@ -5,7 +5,7 @@ import { NavigationLink } from '../components';
 
 export function Navigation() {
   return (
-    <Grid as={Segment} columns={2} doubling fluid inverted attached="top">
+    <Grid as={Segment} columns={2} doubling inverted attached="top">
       <Grid.Column verticalAlign="middle">
         <Header as="h1" inverted>
           執事

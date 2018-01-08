@@ -10,27 +10,38 @@ import { loadApplicationsRequest } from '../actions';
 import { Grid, Button, Input, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { CREATE_APPLICATION_PATH } from '../constants';
+import { RouterState } from 'react-router-redux';
+import queryString from 'query-string';
 
-function mapStateToProps({ applications }: RootState) {
-  return applications;
+function mapStateToProps({ applications, router }: RootState) {
+  return { applications, router };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    loadApplications() {
-      return dispatch(loadApplicationsRequest());
+    loadApplications(search) {
+      return dispatch(loadApplicationsRequest({ search }));
     }
   };
 }
 
 export const Applications = connect(mapStateToProps, mapDispatchToProps)(
-  class extends React.PureComponent<ApplicationsState & { loadApplications: () => {} }> {
+  class extends React.PureComponent<{ applications: ApplicationsState, router: RouterState } & { loadApplications: (search: string) => {} }> {
     componentDidMount() {
-      this.props.loadApplications();
+      this.props.loadApplications(this.getSearch());
+    }
+
+    getSearch(): string {
+      const { location } = this.props.router;
+      const query = queryString.parse(location.search);
+      const { search } = query;
+
+      return search || '';
     }
 
     render() {
-      const { applications, pending } = this.props;
+      const { applications, pending } = this.props.applications;
+
       return (
         <Layout>
           <Grid columns="2">

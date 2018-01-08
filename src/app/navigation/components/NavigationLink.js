@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import type { Node } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, NavLinkProps } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 
 interface NavigationLinkProps {
@@ -9,10 +9,17 @@ interface NavigationLinkProps {
   children: Node;
 }
 
+class NavLinkWrapper extends React.PureComponent<NavLinkProps> {
+  render() {
+    return <NavLink {...this.props} />;
+  }
+}
+
 export function NavigationLink(props: NavigationLinkProps) {
   const { children, ...rest } = props;
+
   return (
-    <Button as={NavLink} {...rest} basic inverted activeClassName="primary">
+    <Button as={NavLinkWrapper} {...rest} basic inverted activeClassName="primary">
       {children}
     </Button>
   );
