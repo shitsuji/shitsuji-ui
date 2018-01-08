@@ -1,6 +1,6 @@
 export const APPLICATIONS_INITIAL_STATE = {
   applications: null,
-  pending: false
+  pending: true
 };
 
 export const APPLICATIONS_PATH = '/applications';

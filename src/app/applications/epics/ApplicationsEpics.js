@@ -12,19 +12,28 @@ import {
   createApplicationSuccess,
   createApplicationFailure
 } from '../actions';
-import { catchError, exhaustMap, map } from 'rxjs/operators';
+import { catchError, exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { ajax } from 'rxjs/observable/dom/ajax';
 import { of } from 'rxjs/observable/of';
 import { BASE_URL } from '../../constants';
+import { CREATE_APPLICATION_SUCCESS, APPLICATIONS_PATH } from '../index';
+import { History } from 'history';
+import queryString from 'query-string';
 
-export function loadApplicationsEpic(action$: Observable<Action>, store: Store, deps: {}) {
+export function loadApplicationsEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
   return action$.pipe(
     ofType(LOAD_APPLICATIONS_REQUEST),
     map((action: LoadApplicationsRequestAction) => action.payload),
-    exhaustMap((payload) => ajax.getJSON(`${BASE_URL}/applications${payload.search ? '?search=' +  payload.search : ''}`).pipe(
-      map((res) => loadApplicationsSuccess(res)),
-      catchError((err) => of(loadApplicationsFailure(err)))
-    ))
+    exhaustMap(({ search }) => {
+      history.push({
+        search: queryString.stringify({ search })
+      });
+
+      return ajax.getJSON(`${BASE_URL}/applications${search ? '?search=' +  search : ''}`).pipe(
+        map((res) => loadApplicationsSuccess(res)),
+        catchError((err) => of(loadApplicationsFailure(err)))
+      );
+    })
   );
 }
 
@@ -37,4 +46,14 @@ export function createApplicationEpic(action$: Observable<Action>, store: Store,
       catchError((err) => of(createApplicationFailure(err)))
     ))
   );
+}
+
+export function navigateToApplicationsOnCreateEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+  return action$.pipe(
+    ofType(CREATE_APPLICATION_SUCCESS),
+    tap(() => {
+      history.push(APPLICATIONS_PATH);
+    }),
+    ignoreElements()
+  )
 }

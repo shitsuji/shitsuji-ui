@@ -12,6 +12,9 @@ import { Link } from 'react-router-dom';
 import { CREATE_APPLICATION_PATH } from '../constants';
 import { RouterState } from 'react-router-redux';
 import queryString from 'query-string';
+import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
+import { debounceTime } from 'rxjs/operators';
 
 function mapStateToProps({ applications, router }: RootState) {
   return { applications, router };
@@ -27,8 +30,29 @@ function mapDispatchToProps(dispatch: Dispatch) {
 
 export const Applications = connect(mapStateToProps, mapDispatchToProps)(
   class extends React.PureComponent<{ applications: ApplicationsState, router: RouterState } & { loadApplications: (search: string) => {} }> {
+    search$: Subject<string>;
+    searchSubscription: Subscription;
+
+    constructor(props) {
+      super(props);
+
+      this.search$ = new Subject();
+    }
+    
     componentDidMount() {
-      this.props.loadApplications(this.getSearch());
+      this.searchSubscription = this.search$
+        .pipe(debounceTime(400))
+        .subscribe((val) => this.props.loadApplications(val));
+
+      this.search$.next(this.getSearch());
+    }
+
+    componentWillUnmount() {
+      if (!this.searchSubscription) {
+        return;
+      }
+
+      this.searchSubscription.unsubscribe();
     }
 
     getSearch(): string {
@@ -39,8 +63,13 @@ export const Applications = connect(mapStateToProps, mapDispatchToProps)(
       return search || '';
     }
 
+    updateSearch(event, { value }) {
+      this.search$.next(value);
+    }
+
     render() {
       const { applications, pending } = this.props.applications;
+      const search = this.getSearch();
 
       return (
         <Layout>
@@ -53,7 +82,14 @@ export const Applications = connect(mapStateToProps, mapDispatchToProps)(
             </Grid.Column>
 
             <Grid.Column textAlign="right">
-              <Input loading={pending} icon="search" iconPosition="left" placeholder="Search..." />
+              <Input defaultValue={search}
+                loading={pending}
+                icon="search"
+                iconPosition="left"
+                placeholder="Search..."
+                onChange={(...args) => this.updateSearch(...args)}
+                disabled={pending}
+              />
             </Grid.Column>
           </Grid>
           <ApplicationsListWithLoader applications={applications} pending={pending} />

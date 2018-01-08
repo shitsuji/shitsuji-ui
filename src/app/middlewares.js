@@ -6,13 +6,18 @@ import { applicationsEpics } from './applications';
 import createHistory from 'history/createBrowserHistory';
 import { routerMiddleware } from 'react-router-redux';
 
+export const history = createHistory();
+
 const rootEpic = combineEpics(
   applicationsEpics,
   navigationEpic
 );
-const epicMiddleware = createEpicMiddleware(rootEpic);
 
-export const history = createHistory();
+const dependencies = {
+  history
+};
+
+const epicMiddleware = createEpicMiddleware(rootEpic, { dependencies });
 
 export const rootMiddleware = composeWithDevTools(
   applyMiddleware(
