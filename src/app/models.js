@@ -1,8 +1,9 @@
 // @flow
-import { ApplicationsState } from './applications';
+import { ApplicationsState, ApplicationDetailsState } from './applications';
 import { RouterState } from 'react-router-redux';
 
 export interface RootState {
   applications: ApplicationsState;
+  applicationDetails: ApplicationDetailsState;
   router: RouterState;
 }

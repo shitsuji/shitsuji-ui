@@ -12,7 +12,26 @@ export interface Application extends ApplicationCreateData {
   repository: any;
 }
 
+export interface Commit {
+  author: string;
+  createdAt: Date;
+  message: string;
+  hash: string;
+}
+
+export interface Version {
+  number: string;
+  createdAt: Date;
+  commit?: Commit;
+}
+
 export interface ApplicationsState {
-  applications: Application[];
+  applications: ?Application[];
   pending: boolean;
+}
+
+export interface ApplicationDetailsState {
+  application: ?Application;
+  pending: boolean;
+  versions: ?Version[];
 }

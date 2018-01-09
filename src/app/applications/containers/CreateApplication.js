@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { Layout } from '../../layout';
 import { ApplicationForm } from '../components';
 import { RootState } from '../../models';
 import { Dispatch } from 'redux';
@@ -27,24 +26,24 @@ export const CreateApplication = connect(mapStateToProps, mapDispatchToProps)(
   class extends React.PureComponent<ApplicationsState & { createApplication: () => {} }> {
     render() {
       return (
-        <Layout>
-          <Grid columns="1">
-            <Grid.Column>
-              <Button as={Link} to={APPLICATIONS_PATH} icon labelPosition="left">
-                <Icon name="chevron left" />
-                Go back
-              </Button>
-            </Grid.Column>
-          </Grid>
+        <Grid columns="1">
+          <Grid.Column>
+            <Button as={Link} to={APPLICATIONS_PATH} icon labelPosition="left">
+              <Icon name="chevron left" />
+              Go back
+            </Button>
+          </Grid.Column>
 
-          <Segment>
-            <Header>
-              Create new application
-            </Header>
+          <Grid.Column>
+            <Segment>
+              <Header>
+                Create new application
+              </Header>
 
-            <ApplicationForm onSubmit={this.props.createApplication} />
-          </Segment>
-        </Layout>
+              <ApplicationForm onSubmit={this.props.createApplication} />
+            </Segment>
+          </Grid.Column>
+        </Grid>
       );
     }
   }

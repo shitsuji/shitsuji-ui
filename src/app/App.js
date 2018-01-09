@@ -5,25 +5,27 @@ import { Route, Redirect, Switch } from 'react-router';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { history } from './middlewares';
-import { Applications, CreateApplication, APPLICATIONS_PATH, CREATE_APPLICATION_PATH } from './applications';
+import { Applications, APPLICATIONS_PATH } from './applications';
 import { Projects } from './projects';
 import { Repositories } from './repositories';
+import { Layout } from './layout';
 
 export class App extends Component<{}> {
   render() {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-          <Switch>
-            <Route exact path={APPLICATIONS_PATH} component={Applications} />
-            <Route exact path={CREATE_APPLICATION_PATH} component={CreateApplication} />
+          <Layout>
+            <Switch>
+              <Route path={APPLICATIONS_PATH} component={Applications} />
 
-            <Route path="/projects" component={Projects} />
+              <Route path="/projects" component={Projects} />
 
-            <Route path="/repositories" component={Repositories} />
+              <Route path="/repositories" component={Repositories} />
 
-            <Redirect to={APPLICATIONS_PATH} />
-          </Switch>
+              <Redirect to={APPLICATIONS_PATH} />
+            </Switch>
+          </Layout>
         </ConnectedRouter>
       </Provider>
     );
