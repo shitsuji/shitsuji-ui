@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
-import { Segment, Header, Grid, Divider } from 'semantic-ui-react';
+import { Segment, Header, Grid, Divider, Button, Icon, Popup } from 'semantic-ui-react';
 import { Application, Version } from '../models';
 import { VersionList } from './VersionList';
 import { VersionContent } from './VersionContent';
+import { TextTruncate } from '../../shared';
 
 export interface ApplicationContentProps {
   application: Application;
@@ -18,20 +19,43 @@ export function ApplicationContent(props: ApplicationContentProps) {
 
   return (
     <Segment color="blue">
-      <Header as="h2">
-        {application.name}
-      </Header>
-      <Divider />
       <Grid>
-        <Grid.Column width="4">
-          <Header as="h3">
-            Versions:
-          </Header>
-          <VersionList versions={versions} onSelect={props.onSelect} />
-        </Grid.Column>
-        <Grid.Column width="12">
-          {selectedVersion ? <VersionContent version={selectedVersion} /> : emptyContentMessage}
-        </Grid.Column>
+        <Grid.Row>
+          <Grid.Column width="8">
+            <Header as="h2">
+              <TextTruncate>
+                {application.name}
+              </TextTruncate>
+            </Header>
+          </Grid.Column>
+          <Grid.Column textAlign="right" width="8">
+            <Button size="tiny" icon labelPosition="left">
+              <Icon name="pencil" />
+              Edit application
+            </Button>
+            <Popup
+              content="Remove application, this cannot be undone!"
+              position="right center"
+              size="tiny"
+              inverted
+              trigger={
+                <Button negative size="tiny" icon>
+                  <Icon name="trash" />
+                </Button>
+              }
+            />
+            
+          </Grid.Column>
+        </Grid.Row>
+        <Divider style={{margin: '0 1rem'}} />
+        <Grid.Row>
+          <Grid.Column width="4">
+            <VersionList versions={versions} selectedVersion={selectedVersion} onSelect={props.onSelect} />
+          </Grid.Column>
+          <Grid.Column width="12">
+            {selectedVersion ? <VersionContent version={selectedVersion} /> : emptyContentMessage}
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
     </Segment>
   );

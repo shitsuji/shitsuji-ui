@@ -11,6 +11,12 @@ import { Grid, Button, Icon } from 'semantic-ui-react';
 import { APPLICATIONS_PATH } from '../constants';
 import { Link } from 'react-router-dom';
 import { ApplicationContentWithLoader } from '../components';
+import styled from 'styled-components';
+
+const NotFoundWrapper = styled.h2`
+  color: grey;
+  text-align: center;
+`;
 
 function mapStateToProps({ applicationDetails, router }: RootState) {
   return { applicationDetails, router };
@@ -61,7 +67,11 @@ export const ApplicationDetails = connect(mapStateToProps, mapDispatchToProps)(c
           </Button>
         </Grid.Column>
         <Grid.Column>
-          <ApplicationContentWithLoader {...contentProps}/>
+          {
+            !pending && !application ?
+              <NotFoundWrapper>Application not found :(</NotFoundWrapper> :
+              <ApplicationContentWithLoader {...contentProps}/>
+          }
         </Grid.Column>
       </Grid>
     );

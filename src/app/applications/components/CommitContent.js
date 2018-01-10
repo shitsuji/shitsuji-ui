@@ -6,6 +6,7 @@ import styled from 'styled-components';
 
 const CommitWrapper = styled(Item.Content)`
   background-color: #efefef;
+  padding: 1rem;
 `;
 
 const CommitMessageWrapper = styled.span`

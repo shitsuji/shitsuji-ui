@@ -27,7 +27,7 @@ export function VersionContent(props: VersionContentProps) {
         <Grid.Column textAlign="right" width="4">
           <Button size="tiny" icon labelPosition="left">
             <Icon name="pencil" />
-            Edit
+            Edit version
           </Button>
         </Grid.Column>
       </Grid.Row>
@@ -40,7 +40,20 @@ export function VersionContent(props: VersionContentProps) {
         </Grid.Row>
       }
       <Grid.Row>
-        <Grid.Column></Grid.Column>
+        <Grid.Column>
+          <Header as="h3">
+            Depends on
+          </Header>
+          Here goes dependencies list on which this app depends
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <Grid.Column>
+          <Header as="h3">
+            Required by
+          </Header>
+          Here goes dependencies list which require this version
+        </Grid.Column>
       </Grid.Row>
     </Grid>
   );
