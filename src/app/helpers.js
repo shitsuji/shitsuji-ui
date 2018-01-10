@@ -1,4 +1,5 @@
 // @flow
+import { defaultFormat } from 'react-day-picker/DayPickerInput';
 
 export function actionCreator<T>(type: string) {
   return function (payload: T) {
@@ -14,4 +15,12 @@ export function reducer<T>(initialState: T, handlers: { [key: string]: (state: T
       return state;
     }
   };
+}
+
+export function formatDate(date: Date | string) {
+  if (typeof date === 'string') {
+    date = new Date(date);
+  }
+
+  return defaultFormat(date);
 }

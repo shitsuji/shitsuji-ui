@@ -18,7 +18,7 @@ export function ApplicationsList(props: ApplicationsListProps) {
 
   if (applications.length < 1) {
     return (
-      <EmptySegment>
+      <EmptySegment color="blue">
         No apps here, try adding new one :)
       </EmptySegment>
     );
@@ -33,7 +33,7 @@ export function ApplicationsList(props: ApplicationsListProps) {
   ));
   
   return (
-    <Segment>
+    <Segment color="blue">
       <List divided relaxed>
         {items}
       </List>

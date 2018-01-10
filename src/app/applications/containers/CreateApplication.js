@@ -35,7 +35,7 @@ export const CreateApplication = connect(mapStateToProps, mapDispatchToProps)(
           </Grid.Column>
 
           <Grid.Column>
-            <Segment>
+            <Segment color="blue">
               <Header>
                 Create new application
               </Header>

@@ -1,11 +1,12 @@
 // @flow
+import { Record } from '../models';
 
 export interface ApplicationCreateData {
   name: string;
   key: string;
 }
 
-export interface Application extends ApplicationCreateData {
+export interface Application extends ApplicationCreateData, Record {
   createdAt: Date;
   isGenerated: boolean;
   isLegacy: boolean;
@@ -19,7 +20,7 @@ export interface Commit {
   hash: string;
 }
 
-export interface Version {
+export interface Version extends Record {
   number: string;
   createdAt: Date;
   commit?: Commit;
@@ -34,4 +35,5 @@ export interface ApplicationDetailsState {
   application: ?Application;
   pending: boolean;
   versions: ?Version[];
+  selectedVersion: ?Version;
 }

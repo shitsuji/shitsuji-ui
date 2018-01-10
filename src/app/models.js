@@ -7,3 +7,8 @@ export interface RootState {
   applicationDetails: ApplicationDetailsState;
   router: RouterState;
 }
+
+export interface Record {
+  '@rid': string;
+  '@class': string;
+}
