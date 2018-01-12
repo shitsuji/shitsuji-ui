@@ -1,5 +1,6 @@
 // @flow
 import { defaultFormat } from 'react-day-picker/DayPickerInput';
+import { Record } from './models';
 
 export function actionCreator<T>(type: string) {
   return function (payload: T) {
@@ -23,4 +24,13 @@ export function formatDate(date: Date | string) {
   }
 
   return defaultFormat(date);
+}
+
+export function getRidAsId(record: Record): string {
+  if (!record) {
+    return '';
+  }
+
+  const rid = record['@rid'];
+  return rid.substr(1, rid.length);
 }
