@@ -6,6 +6,8 @@ import { VersionList } from './VersionList';
 import { VersionContent } from './VersionContent';
 import { TextTruncate } from '../../shared';
 import { getRidAsId } from '../../helpers';
+import { Link } from 'react-router-dom';
+import { APPLICATIONS_PATH } from '../constants';
 
 export interface ApplicationContentProps {
   application: Application;
@@ -33,7 +35,7 @@ export function ApplicationContent(props: ApplicationContentProps) {
             </Header>
           </Grid.Column>
           <Grid.Column textAlign="right" width="8">
-            <Button size="tiny" icon labelPosition="left">
+            <Button as={Link} to={`${APPLICATIONS_PATH}/${applicationId}/edit`} size="tiny" icon labelPosition="left">
               <Icon name="pencil" />
               Edit application
             </Button>

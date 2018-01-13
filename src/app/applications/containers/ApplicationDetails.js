@@ -18,6 +18,7 @@ import { ApplicationContentWithLoader } from '../components';
 import styled from 'styled-components';
 import { getRidAsId } from '../../helpers';
 import { CreateVersion } from './CreateVersion';
+import { EditApplication } from './EditApplication';
 
 const NotFoundWrapper = styled.h2`
   color: grey;
@@ -67,7 +68,7 @@ export const ApplicationDetails = connect(mapStateToProps, mapDispatchToProps)(c
 
   render() {
     const { application, versions, pending, selectedVersion } = this.props.applicationDetails;
-    const { path, params } = this.props.match;
+    const { path } = this.props.match;
 
     const contentProps = {
       application,
@@ -81,10 +82,9 @@ export const ApplicationDetails = connect(mapStateToProps, mapDispatchToProps)(c
 
     return (
       <Switch>
-        {
-          params && params.applicationId &&
-          <Route path={`${path}/versions`} component={CreateVersion} />
-        }
+        <Route path={`${path}/versions`} component={CreateVersion} />
+
+        <Route path={`${path}/edit`} component={EditApplication} />
 
         <Route render={() =>
           <Grid columns="1">

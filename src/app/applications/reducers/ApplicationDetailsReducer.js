@@ -15,7 +15,11 @@ import {
   DELETE_VERSION_SUCCESS,
   DELETE_VERSION_FAILURE,
   DeleteVersionSuccessAction,
-  DeleteApplicationSuccessAction
+  DeleteApplicationSuccessAction,
+  EDIT_APPLICATION_REQUEST,
+  EDIT_APPLICATION_SUCCESS,
+  EditApplicationSuccessAction,
+  EDIT_APPLICATION_FAILURE
 } from '../actions';
 import { ApplicationDetailsState } from '../models';
 import { getRidAsId } from '../../helpers';
@@ -83,6 +87,26 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
     };
   },
   [DELETE_VERSION_FAILURE]: (state) => ({
+    ...state,
+    pending: false
+  }),
+  [EDIT_APPLICATION_REQUEST]: (state) => ({
+    ...state,
+    pending: true
+  }),
+  [EDIT_APPLICATION_SUCCESS]: (state: ApplicationDetailsState, { payload }: EditApplicationSuccessAction) => {
+    const applicationId = getRidAsId(payload);
+    if (!state.application || getRidAsId(state.application) !== applicationId) {
+      return state;
+    }
+
+    return {
+      ...state,
+      application: payload,
+      pending: false
+    };
+  },
+  [EDIT_APPLICATION_FAILURE]: (state) => ({
     ...state,
     pending: false
   })

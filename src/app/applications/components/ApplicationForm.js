@@ -1,9 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import { Form, InputOnChangeData, Button } from 'semantic-ui-react';
-import { ApplicationCreateData } from '../models';
+import { ApplicationCreateData, Application } from '../models';
 
 export interface ApplicationFormProps {
+  application?: Application;
   onSubmit: (application: ApplicationCreateData) => void;
 }
 
@@ -15,10 +16,16 @@ export class ApplicationForm extends Component<ApplicationFormProps, Application
   constructor(props: ApplicationFormProps) {
     super(props);
 
+    let name = '', key = '';
+    if (this.props.application) {
+      name = this.props.application.name;
+      key = this.props.application.key;
+    }
+
     this.state = {
       application: {
-        name: '',
-        key: ''
+        name,
+        key
       }
     };
   }
@@ -32,15 +39,34 @@ export class ApplicationForm extends Component<ApplicationFormProps, Application
   }
 
   onSubmit() {
-    this.props.onSubmit(this.state.application);
+    const application = {
+      ...this.props.application,
+      ...this.state.application
+    };
+
+    this.props.onSubmit(application);
   }
 
   render() {
+    const { name, key } = this.state.application;
+
     return (
       <Form onSubmit={(...args) => this.onSubmit(...args)}>
-        <Form.Input type="text" label="Name" name="name" onChange={(...args) => this.onChange(...args)} />
+        <Form.Input
+          defaultValue={name}
+          type="text"
+          label="Name"
+          name="name"
+          onChange={(...args) => this.onChange(...args)}
+        />
 
-        <Form.Input type="text" label="Key" name="key" onChange={(...args) => this.onChange(...args)} />
+        <Form.Input
+          defaultValue={key}
+          type="text"
+          label="Key"
+          name="key"
+          onChange={(...args) => this.onChange(...args)}
+        />
 
         <Button type="submit" fluid primary>
           Submit
