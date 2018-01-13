@@ -27,14 +27,14 @@ export function ApplicationContent(props: ApplicationContentProps) {
     <Segment color="blue">
       <Grid>
         <Grid.Row>
-          <Grid.Column width="8">
+          <Grid.Column width="11">
             <Header as="h2">
               <TextTruncate>
                 {application.name}
               </TextTruncate>
             </Header>
           </Grid.Column>
-          <Grid.Column textAlign="right" width="8">
+          <Grid.Column textAlign="right" width="5">
             <Button as={Link} to={`${APPLICATIONS_PATH}/${applicationId}/edit`} size="tiny" icon labelPosition="left">
               <Icon name="pencil" />
               Edit application

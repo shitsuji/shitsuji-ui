@@ -7,6 +7,7 @@ import { CommitContent } from './CommitContent';
 import { getRidAsId } from '../../helpers';
 import { Link } from 'react-router-dom';
 import { APPLICATIONS_PATH, VERSIONS_PATH } from '../constants';
+import { TextTruncate } from '../../shared';
 
 export interface VersionContentProps {
   application: Application;
@@ -21,9 +22,9 @@ export function VersionContent(props: VersionContentProps) {
   return (
     <Grid>
       <Grid.Row verticalAlign="middle">
-        <Grid.Column width="12">
-          <Header as="h3">
-            {props.version.number}
+        <Grid.Column width="10">
+          <Header as="h3" >
+            <TextTruncate>{props.version.number}</TextTruncate>
             {
               props.version.createdAt &&
               <Header.Subheader>
@@ -32,7 +33,7 @@ export function VersionContent(props: VersionContentProps) {
             }
           </Header>
         </Grid.Column>
-        <Grid.Column textAlign="right" width="4">
+        <Grid.Column textAlign="right" width="6">
           <Button as={Link} size="tiny" icon labelPosition="left"
             to={`${APPLICATIONS_PATH}/${applicationId}${VERSIONS_PATH}/${versionId}`}>
             <Icon name="pencil" />

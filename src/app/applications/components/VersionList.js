@@ -47,7 +47,7 @@ export function VersionList(props: VersionListProps) {
           </List.Content>
           <List.Content>
             <List.Header>
-              {version.number}
+              <TextTruncate>{version.number}</TextTruncate>
             </List.Header>
             <TextTruncate title={message}>
               {message}
