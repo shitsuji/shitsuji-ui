@@ -12,18 +12,14 @@ import {
   deleteVersionRequest
 } from '../actions';
 import { Grid, Button, Icon } from 'semantic-ui-react';
-import { APPLICATIONS_PATH } from '../constants';
+import { APPLICATIONS_PATH, VERSIONS_PATH } from '../constants';
 import { Link, Switch, Route } from 'react-router-dom';
 import { ApplicationContentWithLoader } from '../components';
-import styled from 'styled-components';
 import { getRidAsId } from '../../helpers';
 import { CreateVersion } from './CreateVersion';
 import { EditApplication } from './EditApplication';
-
-const NotFoundWrapper = styled.h2`
-  color: grey;
-  text-align: center;
-`;
+import { NotFoundWrapper } from '../../shared';
+import { EditVersion } from './EditVersion';
 
 function mapStateToProps({ applicationDetails, router }: RootState) {
   return { applicationDetails };
@@ -67,7 +63,8 @@ export const ApplicationDetails = connect(mapStateToProps, mapDispatchToProps)(c
   }
 
   render() {
-    const { application, versions, pending, selectedVersion } = this.props.applicationDetails;
+    const { application, versions, pending, selectedVersionId } = this.props.applicationDetails;
+    const selectedVersion = versions && versions.find((v) => getRidAsId(v) === selectedVersionId);
     const { path } = this.props.match;
 
     const contentProps = {
@@ -82,7 +79,8 @@ export const ApplicationDetails = connect(mapStateToProps, mapDispatchToProps)(c
 
     return (
       <Switch>
-        <Route path={`${path}/versions`} component={CreateVersion} />
+        <Route path={`${path}${VERSIONS_PATH}/:versionId`} component={EditVersion} />
+        <Route path={`${path}${VERSIONS_PATH}`} component={CreateVersion} />
 
         <Route path={`${path}/edit`} component={EditApplication} />
 

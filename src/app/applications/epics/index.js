@@ -3,6 +3,7 @@ import { loadApplicationsEpic, createApplicationEpic, deleteApplicationEpic, nav
 import { loadApplicationDetailsEpic } from './ApplicationDetailsEpics';
 import { createVersionEpic, deleteVersionEpic, navigateToVersionsOnSuccessEpic } from './VersionsEpics';
 import { editApplicationEpic, navigateToApplicationsOnEditEpic } from './EditApplicationEpics';
+import { editVersionEpic, navigateToVersionsOnEditEpic } from './EditVersionEpics';
 
 export const applicationsEpics = combineEpics(
   loadApplicationsEpic,
@@ -14,5 +15,7 @@ export const applicationsEpics = combineEpics(
   deleteVersionEpic,
   navigateToVersionsOnSuccessEpic,
   editApplicationEpic,
-  navigateToApplicationsOnEditEpic
+  navigateToApplicationsOnEditEpic,
+  editVersionEpic,
+  navigateToVersionsOnEditEpic
 );

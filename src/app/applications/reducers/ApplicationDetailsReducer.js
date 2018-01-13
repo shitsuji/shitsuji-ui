@@ -19,7 +19,11 @@ import {
   EDIT_APPLICATION_REQUEST,
   EDIT_APPLICATION_SUCCESS,
   EditApplicationSuccessAction,
-  EDIT_APPLICATION_FAILURE
+  EDIT_APPLICATION_FAILURE,
+  EDIT_VERSION_REQUEST,
+  EDIT_VERSION_SUCCESS,
+  EditVersionSuccessAction,
+  EDIT_VERSION_FAILURE
 } from '../actions';
 import { ApplicationDetailsState } from '../models';
 import { getRidAsId } from '../../helpers';
@@ -33,7 +37,9 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
     ...state,
     ...payload,
     pending: false,
-    selectedVersion: payload.versions && payload.versions.length ? payload.versions[0] : null
+    selectedVersionId: payload.versions && payload.versions.length ?
+      getRidAsId(payload.versions[0]) :
+      null
   }),
   [LOAD_APPLICATION_DETAILS_FAILURE]: (state) => ({
     ...state,
@@ -41,11 +47,14 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
   }),
   [SELECT_VERSION]: (state, { payload }) => ({
     ...state,
-    selectedVersion: payload
+    selectedVersionId: getRidAsId(payload)
   }),
   [CREATE_VERSION_SUCCESS]: (state: ApplicationDetailsState, { payload }: CreateVersionSuccessAction) => {
     if (!state.application || !state.versions || getRidAsId(state.application) !== payload.applicationId) {
-      return state;
+      return {
+        ...state,
+        pending: false
+      };
     }
 
     const versions = [...state.versions, payload.version];
@@ -61,7 +70,10 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
   }),
   [DELETE_APPLICATION_SUCCESS]: (state: ApplicationDetailsState, { payload }: DeleteApplicationSuccessAction) => {
     if (!state.application || getRidAsId(state.application) !== payload.applicationId) {
-      return state;
+      return {
+        ...state,
+        pending: false
+      };
     }
   
     return APPLICATION_DETAILS_INITIAL_STATE;
@@ -76,7 +88,10 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
   }),
   [DELETE_VERSION_SUCCESS]: (state: ApplicationDetailsState, { payload }: DeleteVersionSuccessAction) => {
     if (!state.application || !state.versions || getRidAsId(state.application) !== payload.applicationId) {
-      return state;
+      return {
+        ...state,
+        pending: false
+      };
     }
 
     const versions = state.versions.filter((v) => getRidAsId(v) !== payload.versionId);
@@ -97,7 +112,10 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
   [EDIT_APPLICATION_SUCCESS]: (state: ApplicationDetailsState, { payload }: EditApplicationSuccessAction) => {
     const applicationId = getRidAsId(payload);
     if (!state.application || getRidAsId(state.application) !== applicationId) {
-      return state;
+      return {
+        ...state,
+        pending: false
+      };
     }
 
     return {
@@ -107,6 +125,31 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
     };
   },
   [EDIT_APPLICATION_FAILURE]: (state) => ({
+    ...state,
+    pending: false
+  }),
+  [EDIT_VERSION_REQUEST]: (state) => ({
+    ...state,
+    pending: true
+  }),
+  [EDIT_VERSION_SUCCESS]: (state: ApplicationDetailsState, { payload }: EditVersionSuccessAction) => {
+    if (!state.application || !state.versions || getRidAsId(state.application) !== payload.applicationId) {
+      return {
+        ...state,
+        pending: false
+      };
+    }
+
+    const versionId = getRidAsId(payload.version);
+    const versions = state.versions && state.versions.map((v) => getRidAsId(v) === versionId ? payload.version : v);
+
+    return {
+      ...state,
+      versions,
+      pending: false
+    };
+  },
+  [EDIT_VERSION_FAILURE]: (state) => ({
     ...state,
     pending: false
   })

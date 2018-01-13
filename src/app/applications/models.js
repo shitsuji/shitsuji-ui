@@ -38,5 +38,5 @@ export interface ApplicationDetailsState {
   application: ?Application;
   pending: boolean;
   versions: ?Version[];
-  selectedVersion: ?Version;
+  selectedVersionId: ?string;
 }

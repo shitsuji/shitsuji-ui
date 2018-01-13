@@ -1,9 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import { Form, InputOnChangeData, Button } from 'semantic-ui-react';
-import { VersionCreateData } from '../models';
+import { VersionCreateData, Version } from '../models';
 
 export interface VersionFormProps {
+  version?: Version;
   onSubmit: (version: VersionCreateData) => void;
 }
 
@@ -15,9 +16,14 @@ export class VersionForm extends Component<VersionFormProps, VersionFormState> {
   constructor(props: VersionFormProps) {
     super(props);
 
+    let number = '';
+    if (props.version) {
+      number = props.version.number;
+    }
+
     this.state = {
       version: {
-        number: ''
+        number
       }
     };
   }
@@ -31,13 +37,26 @@ export class VersionForm extends Component<VersionFormProps, VersionFormState> {
   }
 
   onSubmit() {
-    this.props.onSubmit(this.state.version);
+    const version = {
+      ...this.props.version,
+      ...this.state.version
+    };
+
+    this.props.onSubmit(version);
   }
 
   render() {
+    const { number } = this.state.version;
+
     return (
       <Form onSubmit={(...args) => this.onSubmit(...args)}>
-        <Form.Input type="text" label="Number" name="number" onChange={(...args) => this.onChange(...args)} />
+        <Form.Input
+          defaultValue={number}
+          type="text"
+          label="Number"
+          name="number"
+          onChange={(...args) => this.onChange(...args)}
+        />
 
         <Button type="submit" fluid primary>
           Submit

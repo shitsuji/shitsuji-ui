@@ -5,6 +5,8 @@ import { Version, Application } from '../models';
 import { formatDate } from '../../helpers';
 import { CommitContent } from './CommitContent';
 import { getRidAsId } from '../../helpers';
+import { Link } from 'react-router-dom';
+import { APPLICATIONS_PATH, VERSIONS_PATH } from '../constants';
 
 export interface VersionContentProps {
   application: Application;
@@ -31,7 +33,8 @@ export function VersionContent(props: VersionContentProps) {
           </Header>
         </Grid.Column>
         <Grid.Column textAlign="right" width="4">
-          <Button size="tiny" icon labelPosition="left">
+          <Button as={Link} size="tiny" icon labelPosition="left"
+            to={`${APPLICATIONS_PATH}/${applicationId}${VERSIONS_PATH}/${versionId}`}>
             <Icon name="pencil" />
             Edit version
           </Button>
