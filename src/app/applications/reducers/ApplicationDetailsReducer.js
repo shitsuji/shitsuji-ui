@@ -7,7 +7,15 @@ import {
   LOAD_APPLICATION_DETAILS_FAILURE,
   SELECT_VERSION,
   CREATE_VERSION_SUCCESS,
-  CreateVersionSuccessAction
+  CreateVersionSuccessAction,
+  DELETE_APPLICATION_REQUEST,
+  DELETE_APPLICATION_SUCCESS,
+  DELETE_APPLICATION_FAILURE,
+  DELETE_VERSION_REQUEST,
+  DELETE_VERSION_SUCCESS,
+  DELETE_VERSION_FAILURE,
+  DeleteVersionSuccessAction,
+  DeleteApplicationSuccessAction
 } from '../actions';
 import { ApplicationDetailsState } from '../models';
 import { getRidAsId } from '../../helpers';
@@ -42,5 +50,40 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
       ...state,
       versions
     };
-  }
+  },
+  [DELETE_APPLICATION_REQUEST]: (state) => ({
+    ...state,
+    pending: true
+  }),
+  [DELETE_APPLICATION_SUCCESS]: (state: ApplicationDetailsState, { payload }: DeleteApplicationSuccessAction) => {
+    if (!state.application || getRidAsId(state.application) !== payload.applicationId) {
+      return state;
+    }
+  
+    return APPLICATION_DETAILS_INITIAL_STATE;
+  },
+  [DELETE_APPLICATION_FAILURE]: (state) => ({
+    ...state,
+    pending: false
+  }),
+  [DELETE_VERSION_REQUEST]: (state) => ({
+    ...state,
+    pending: true
+  }),
+  [DELETE_VERSION_SUCCESS]: (state: ApplicationDetailsState, { payload }: DeleteVersionSuccessAction) => {
+    if (!state.application || !state.versions || getRidAsId(state.application) !== payload.applicationId) {
+      return state;
+    }
+
+    const versions = state.versions.filter((v) => getRidAsId(v) !== payload.versionId);
+    return {
+      ...state,
+      pending: false,
+      versions
+    };
+  },
+  [DELETE_VERSION_FAILURE]: (state) => ({
+    ...state,
+    pending: false
+  })
 });

@@ -9,6 +9,9 @@ export const LOAD_APPLICATIONS_FAILURE = 'LOAD_APPLICATIONS_FAILURE';
 export const CREATE_APPLICATION_REQUEST = 'CREATE_APPLICATION_REQUEST';
 export const CREATE_APPLICATION_SUCCESS = 'CREATE_APPLICATION_SUCCESS';
 export const CREATE_APPLICATION_FAILURE = 'CREATE_APPLICATION_FAILURE';
+export const DELETE_APPLICATION_REQUEST = 'DELETE_APPLICATION_REQUEST';
+export const DELETE_APPLICATION_SUCCESS = 'DELETE_APPLICATION_SUCCESS';
+export const DELETE_APPLICATION_FAILURE = 'DELETE_APPLICATION_FAILURE';
 
 export interface LoadApplicationsRequestAction extends Action {
   payload: { search: string };
@@ -45,3 +48,25 @@ export interface CreateApplicationFailureAction extends Action {
 }
 
 export const createApplicationFailure = actionCreator(CREATE_APPLICATION_FAILURE);
+
+export interface DeleteApplicationRequestAction extends Action {
+  payload: {
+    applicationId: string;
+  };
+}
+
+export const deleteApplicationRequest = actionCreator(DELETE_APPLICATION_REQUEST);
+
+export interface DeleteApplicationSuccessAction extends Action {
+  payload: {
+    applicationId: string;
+  };
+}
+
+export const deleteApplicationSuccess = actionCreator(DELETE_APPLICATION_SUCCESS);
+
+export interface DeleteApplicationFailureAction extends Action {
+  payload: null;
+}
+
+export const deleteApplicationFailure = actionCreator(DELETE_APPLICATION_FAILURE);

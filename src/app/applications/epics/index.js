@@ -1,13 +1,15 @@
 import { combineEpics } from 'redux-observable';
-import { loadApplicationsEpic, createApplicationEpic, navigateToApplicationsOnCreateEpic } from './ApplicationsEpics';
+import { loadApplicationsEpic, createApplicationEpic, deleteApplicationEpic, navigateToApplicationsOnSuccessEpic } from './ApplicationsEpics';
 import { loadApplicationDetailsEpic } from './ApplicationDetailsEpics';
-import { createVersionEpic, navigateToVersionsOnCreateEpic } from './VersionsEpics';
+import { createVersionEpic, deleteVersionEpic, navigateToVersionsOnSuccessEpic } from './VersionsEpics';
 
 export const applicationsEpics = combineEpics(
   loadApplicationsEpic,
   createApplicationEpic,
-  navigateToApplicationsOnCreateEpic,
+  deleteApplicationEpic,
+  navigateToApplicationsOnSuccessEpic,
   loadApplicationDetailsEpic,
   createVersionEpic,
-  navigateToVersionsOnCreateEpic
+  deleteVersionEpic,
+  navigateToVersionsOnSuccessEpic
 );

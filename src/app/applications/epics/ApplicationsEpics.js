@@ -11,7 +11,12 @@ import {
   CreateApplicationRequestAction,
   createApplicationSuccess,
   createApplicationFailure,
-  CREATE_APPLICATION_SUCCESS
+  CREATE_APPLICATION_SUCCESS,
+  DELETE_APPLICATION_SUCCESS,
+  DELETE_APPLICATION_REQUEST,
+  deleteApplicationFailure,
+  deleteApplicationSuccess,
+  DeleteApplicationRequestAction
 } from '../actions';
 import { catchError, exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { ajax } from 'rxjs/observable/dom/ajax';
@@ -49,9 +54,20 @@ export function createApplicationEpic(action$: Observable<Action>, store: Store,
   );
 }
 
-export function navigateToApplicationsOnCreateEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+export function deleteApplicationEpic(action$: Observable<Action>, store: Store, deps: {}) {
   return action$.pipe(
-    ofType(CREATE_APPLICATION_SUCCESS),
+    ofType(DELETE_APPLICATION_REQUEST),
+    map((action: DeleteApplicationRequestAction) => action.payload),
+    exhaustMap(({ applicationId }) => ajax.post(`${BASE_URL}/applications/${applicationId}`).pipe(
+      map(() => deleteApplicationSuccess({ applicationId })),
+      catchError((err) => of(deleteApplicationFailure(err)))
+    ))
+  );
+}
+
+export function navigateToApplicationsOnSuccessEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+  return action$.pipe(
+    ofType(CREATE_APPLICATION_SUCCESS, DELETE_APPLICATION_SUCCESS),
     tap(() => {
       history.push(APPLICATIONS_PATH);
     }),

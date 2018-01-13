@@ -5,7 +5,12 @@ import { RootState } from '../../models';
 import { ApplicationDetailsState, Version } from '../models';
 import { match } from 'react-router';
 import { Dispatch } from 'redux';
-import { loadApplicationDeatilsRequest, selectVersion } from '../actions';
+import {
+  loadApplicationDeatilsRequest,
+  selectVersion,
+  deleteApplicationRequest,
+  deleteVersionRequest
+} from '../actions';
 import { Grid, Button, Icon } from 'semantic-ui-react';
 import { APPLICATIONS_PATH } from '../constants';
 import { Link, Switch, Route } from 'react-router-dom';
@@ -30,6 +35,12 @@ function mapDispatchToProps(dispatch: Dispatch) {
     },
     selectVersion: (version: Version) => {
       dispatch(selectVersion(version));
+    },
+    deleteApplication: (applicationId: string) => {
+      dispatch(deleteApplicationRequest({ applicationId }));
+    },
+    deleteVersion: (payload: { applicationId: string, versionId: string }) => {
+      dispatch(deleteVersionRequest(payload));
     }
   };
 }
@@ -39,6 +50,8 @@ export interface ApplicationDetailsProps {
   match: match<{ applicationId: string }>;
   loadApplicationDetails: (applicationId: string) => void;
   selectVersion: (version: Version) => void;
+  deleteApplication: (applicationId: string) => void;
+  deleteVersion: (payload: { applicationId: string, versionId: string }) => void;
 }
 
 export const ApplicationDetails = connect(mapStateToProps, mapDispatchToProps)(class extends React.PureComponent<ApplicationDetailsProps> {
@@ -61,7 +74,9 @@ export const ApplicationDetails = connect(mapStateToProps, mapDispatchToProps)(c
       versions,
       pending,
       selectedVersion,
-      onSelect: this.props.selectVersion
+      onSelect: this.props.selectVersion,
+      onDeleteApplication: this.props.deleteApplication,
+      onDeleteVersion: this.props.deleteVersion
     };
 
     return (

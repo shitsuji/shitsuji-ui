@@ -12,11 +12,14 @@ export interface ApplicationContentProps {
   versions: Version[];
   selectedVersion: ?Version;
   onSelect: (version: Version) => void;
+  onDeleteApplication: (applicationId: string) => void;
+  onDeleteVersion: (payload: { applicationId: string, versionId: string }) => void;
 }
 
 export function ApplicationContent(props: ApplicationContentProps) {
   const { application, versions, selectedVersion } = props;
   const emptyContentMessage = 'Please select version from the list or create a new one :)';
+  const applicationId = getRidAsId(application);
 
   return (
     <Segment color="blue">
@@ -40,7 +43,8 @@ export function ApplicationContent(props: ApplicationContentProps) {
               size="tiny"
               inverted
               trigger={
-                <Button negative size="tiny" icon>
+                <Button negative size="tiny" icon
+                  onClick={() => props.onDeleteApplication(applicationId)}>
                   <Icon name="trash" />
                 </Button>
               }
@@ -59,7 +63,14 @@ export function ApplicationContent(props: ApplicationContentProps) {
             />
           </Grid.Column>
           <Grid.Column width="12">
-            {selectedVersion ? <VersionContent version={selectedVersion} /> : emptyContentMessage}
+            {selectedVersion ?
+              <VersionContent
+                application={application}
+                version={selectedVersion}
+                onDeleteVersion={props.onDeleteVersion}
+              /> :
+              emptyContentMessage
+            }
           </Grid.Column>
         </Grid.Row>
       </Grid>

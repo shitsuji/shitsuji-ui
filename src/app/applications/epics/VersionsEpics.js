@@ -8,7 +8,12 @@ import {
   CreateVersionRequestAction,
   createVersionSuccess,
   createVersionFailure,
-  CreateVersionSuccessAction
+  CreateVersionSuccessAction,
+  DELETE_VERSION_REQUEST,
+  DeleteVersionRequestAction,
+  deleteVersionSuccess,
+  deleteVersionFailure,
+  DeleteVersionSuccessAction
 } from '../actions';
 import { catchError, exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { ajax } from 'rxjs/observable/dom/ajax';
@@ -31,11 +36,23 @@ export function createVersionEpic(action$: Observable<Action>, store: Store, dep
   );
 }
 
-export function navigateToVersionsOnCreateEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+export function deleteVersionEpic(action$: Observable<Action>, store: Store, deps: {}) {
+  return action$.pipe(
+    ofType(DELETE_VERSION_REQUEST),
+    map((action: DeleteVersionRequestAction) => action.payload),
+    exhaustMap(({ versionId, applicationId }) => ajax.post(`${BASE_URL}/versions/${versionId}`).pipe(
+      map(() => deleteVersionSuccess({ versionId, applicationId })),
+      catchError((err) => of(deleteVersionFailure(err)))
+    ))
+  );
+}
+
+export function navigateToVersionsOnSuccessEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
   return action$.pipe(
     ofType(CREATE_VERSION_SUCCESS),
-    tap((action: CreateVersionSuccessAction) => {
-      history.push(`${APPLICATIONS_PATH}/${action.payload.applicationId}`);
+    map((action: CreateVersionSuccessAction | DeleteVersionSuccessAction) => action.payload.applicationId),
+    tap((applicationId) => {
+      history.push(`${APPLICATIONS_PATH}/${applicationId}`);
     }),
     ignoreElements()
   );
