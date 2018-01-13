@@ -10,13 +10,14 @@ import {
   CREATE_APPLICATION_REQUEST,
   CreateApplicationRequestAction,
   createApplicationSuccess,
-  createApplicationFailure
+  createApplicationFailure,
+  CREATE_APPLICATION_SUCCESS
 } from '../actions';
 import { catchError, exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { ajax } from 'rxjs/observable/dom/ajax';
 import { of } from 'rxjs/observable/of';
 import { BASE_URL } from '../../constants';
-import { CREATE_APPLICATION_SUCCESS, APPLICATIONS_PATH } from '../index';
+import { APPLICATIONS_PATH } from '../constants';
 import { History } from 'history';
 import queryString from 'query-string';
 
@@ -42,7 +43,7 @@ export function createApplicationEpic(action$: Observable<Action>, store: Store,
     ofType(CREATE_APPLICATION_REQUEST),
     map((action: CreateApplicationRequestAction) => action.payload),
     exhaustMap((payload) => ajax.post(`${BASE_URL}/applications`, payload).pipe(
-      map((res) => createApplicationSuccess(res)),
+      map((res) => createApplicationSuccess(res.response)),
       catchError((err) => of(createApplicationFailure(err)))
     ))
   );
@@ -55,5 +56,5 @@ export function navigateToApplicationsOnCreateEpic(action$: Observable<Action>, 
       history.push(APPLICATIONS_PATH);
     }),
     ignoreElements()
-  )
+  );
 }

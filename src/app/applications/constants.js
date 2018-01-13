@@ -14,3 +14,4 @@ export const APPLICATION_DETAILS_INITIAL_STATE: ApplicationDetailsState = {
 
 export const APPLICATIONS_PATH = '/applications';
 export const CREATE_APPLICATION_PATH = `${APPLICATIONS_PATH}/create`;
+export const VERSIONS_PATH = '/versions';

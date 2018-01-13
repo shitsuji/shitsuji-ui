@@ -5,6 +5,7 @@ import { Application, Version } from '../models';
 import { VersionList } from './VersionList';
 import { VersionContent } from './VersionContent';
 import { TextTruncate } from '../../shared';
+import { getRidAsId } from '../../helpers';
 
 export interface ApplicationContentProps {
   application: Application;
@@ -50,7 +51,12 @@ export function ApplicationContent(props: ApplicationContentProps) {
         <Divider style={{margin: '0 1rem'}} />
         <Grid.Row>
           <Grid.Column width="4">
-            <VersionList versions={versions} selectedVersion={selectedVersion} onSelect={props.onSelect} />
+            <VersionList
+              applicationId={getRidAsId(application)}
+              versions={versions}
+              selectedVersion={selectedVersion}
+              onSelect={props.onSelect}
+            />
           </Grid.Column>
           <Grid.Column width="12">
             {selectedVersion ? <VersionContent version={selectedVersion} /> : emptyContentMessage}

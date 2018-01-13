@@ -4,6 +4,8 @@ import { List, Button, Grid, Header, Icon, Divider } from 'semantic-ui-react';
 import { Version } from '../models';
 import styled from 'styled-components';
 import { TextTruncate } from '../../shared';
+import { Link } from 'react-router-dom';
+import { APPLICATIONS_PATH } from '../index';
 
 const EmptySegment = styled.p`
   text-align: center;
@@ -15,6 +17,7 @@ const SelectButton = styled(Button)`
 `;
 
 export interface VersionListProps {
+  applicationId: string;
   versions: Version[];
   selectedVersion: ?Version;
   onSelect: (version: Version) => void;
@@ -66,7 +69,7 @@ export function VersionList(props: VersionListProps) {
           </Header>
         </Grid.Column>
         <Grid.Column textAlign="right" width="10">
-          <Button size="tiny" icon labelPosition="left">
+          <Button as={Link} to={`${APPLICATIONS_PATH}/${props.applicationId}/versions`} size="tiny" icon labelPosition="left">
             <Icon name="plus" />
             Add version
           </Button>

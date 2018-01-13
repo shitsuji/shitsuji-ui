@@ -5,4 +5,6 @@ export * from './ApplicationContent';
 export * from './ApplicationContentWithLoader';
 export * from './CommitContent';
 export * from './VersionContent';
+export * from './VersionForm';
+export * from './VersionFormWithLoader';
 export * from './VersionList';

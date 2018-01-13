@@ -1,18 +1,13 @@
 // @flow
 import React from 'react';
 import { ApplicationForm } from '../components';
-import { RootState } from '../../models';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { ApplicationsState, ApplicationCreateData } from '../models';
+import { ApplicationCreateData } from '../models';
 import { createApplicationRequest } from '../actions';
 import { Segment, Header, Grid, Button, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { APPLICATIONS_PATH } from '../index';
-
-function mapStateToProps({ applications }: RootState) {
-  return applications;
-}
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
@@ -22,8 +17,8 @@ function mapDispatchToProps(dispatch: Dispatch) {
   };
 }
 
-export const CreateApplication = connect(mapStateToProps, mapDispatchToProps)(
-  class extends React.PureComponent<ApplicationsState & { createApplication: () => {} }> {
+export const CreateApplication = connect(null, mapDispatchToProps)(
+  class extends React.PureComponent<{ createApplication: () => {} }> {
     render() {
       return (
         <Grid columns="1">

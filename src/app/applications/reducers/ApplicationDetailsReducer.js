@@ -5,8 +5,12 @@ import {
   LOAD_APPLICATION_DETAILS_REQUEST,
   LOAD_APPLICATION_DETAILS_SUCCESS,
   LOAD_APPLICATION_DETAILS_FAILURE,
-  SELECT_VERSION
+  SELECT_VERSION,
+  CREATE_VERSION_SUCCESS,
+  CreateVersionSuccessAction
 } from '../actions';
+import { ApplicationDetailsState } from '../models';
+import { getRidAsId } from '../../helpers';
 
 export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STATE, {
   [LOAD_APPLICATION_DETAILS_REQUEST]: (state) => ({
@@ -26,5 +30,17 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
   [SELECT_VERSION]: (state, { payload }) => ({
     ...state,
     selectedVersion: payload
-  })
+  }),
+  [CREATE_VERSION_SUCCESS]: (state: ApplicationDetailsState, { payload }: CreateVersionSuccessAction) => {
+    if (!state.application || !state.versions || getRidAsId(state.application) !== payload.applicationId) {
+      return state;
+    }
+
+    const versions = [...state.versions, payload.version];
+
+    return {
+      ...state,
+      versions
+    };
+  }
 });

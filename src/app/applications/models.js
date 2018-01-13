@@ -6,6 +6,10 @@ export interface ApplicationCreateData {
   key: string;
 }
 
+export interface VersionCreateData {
+  number: string;
+}
+
 export interface Application extends ApplicationCreateData, Record {
   createdAt: Date;
   isGenerated: boolean;
@@ -20,8 +24,7 @@ export interface Commit {
   hash: string;
 }
 
-export interface Version extends Record {
-  number: string;
+export interface Version extends VersionCreateData, Record {
   createdAt: Date;
   commit?: Commit;
 }
