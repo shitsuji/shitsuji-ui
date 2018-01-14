@@ -2,9 +2,9 @@
 import React from 'react';
 import { List, Segment, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
-import { Project } from '../models';
+import { Repository } from '../models';
 import { Link } from 'react-router-dom';
-import { PROJECTS_PATH } from '../constants';
+import { REPOSITORIES_PATH } from '../constants';
 import { getRidAsId, formatDate } from '../../helpers';
 
 const EmptySegment = styled(Segment)`
@@ -12,31 +12,31 @@ const EmptySegment = styled(Segment)`
   color: grey;
 `;
 
-export interface ProjectsListProps {
-  projects: Project[];
+export interface RepositoriesListProps {
+  repositories: Repository[];
 }
 
-export function ProjectsList(props: ProjectsListProps) {
-  const projects = props.projects || [];
+export function RepositoriesList(props: RepositoriesListProps) {
+  const repositories = props.repositories || [];
 
-  if (projects.length < 1) {
+  if (repositories.length < 1) {
     return (
       <EmptySegment color="blue">
-        No projects here, try adding new one :)
+        No repositories here, try adding new one :)
       </EmptySegment>
     );
   }
 
-  const items = projects.map((project) => (
-    <List.Item as={Link} key={project['@rid']} to={`${PROJECTS_PATH}/${getRidAsId(project)}`}>
-      { project.createdAt &&
+  const items = repositories.map((repo) => (
+    <List.Item as={Link} key={repo['@rid']} to={`${REPOSITORIES_PATH}/${getRidAsId(repo)}`}>
+      { repo.createdAt &&
         <List.Content floated="right">
-          {formatDate(project.createdAt)}
+          {formatDate(repo.createdAt)}
         </List.Content>
       }
       <List.Content>
         <Header as="h4">
-          {project.name}
+          {repo.name}
         </Header>
       </List.Content>
     </List.Item>

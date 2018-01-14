@@ -7,7 +7,7 @@ import { ConnectedRouter } from 'react-router-redux';
 import { history } from './middlewares';
 import { Applications, APPLICATIONS_PATH } from './applications';
 import { Projects, PROJECTS_PATH } from './projects';
-import { Repositories } from './repositories';
+import { Repositories, REPOSITORIES_PATH } from './repositories';
 import { Layout } from './layout';
 
 export class App extends Component<{}> {
@@ -21,7 +21,7 @@ export class App extends Component<{}> {
 
               <Route path={PROJECTS_PATH} component={Projects} />
 
-              <Route path="/repositories" component={Repositories} />
+              <Route path={REPOSITORIES_PATH} component={Repositories} />
 
               <Redirect to={APPLICATIONS_PATH} />
             </Switch>

@@ -6,13 +6,15 @@ import { applicationsEpics } from './applications';
 import { projectsEpics } from './projects';
 import createHistory from 'history/createBrowserHistory';
 import { routerMiddleware } from 'react-router-redux';
+import { repositoriesEpics } from './repositories';
 
 export const history = createHistory();
 
 const rootEpic = combineEpics(
   applicationsEpics,
   navigationEpic,
-  projectsEpics
+  projectsEpics,
+  repositoriesEpics
 );
 
 const dependencies = {
