@@ -12,6 +12,7 @@ import { Link, Switch, Route } from 'react-router-dom';
 import { ProjectContentWithLoader } from '../components';
 import { getRidAsId } from '../../helpers';
 import { NotFoundWrapper } from '../../shared';
+import { EditProject } from './EditProject';
 
 function mapStateToProps({ projectDetails }: RootState) {
   return { projectDetails };
@@ -48,7 +49,7 @@ export const ProjectDetails = connect(mapStateToProps, mapDispatchToProps)(class
 
   render() {
     const { project, pending } = this.props.projectDetails;
-    // const { path } = this.props.match;
+    const { path } = this.props.match;
 
     const contentProps = {
       project,
@@ -58,7 +59,7 @@ export const ProjectDetails = connect(mapStateToProps, mapDispatchToProps)(class
 
     return (
       <Switch>
-        {/* <Route path={`${path}/edit`} component={EditProject} /> */}
+        <Route path={`${path}/edit`} component={EditProject} />
 
         <Route render={() =>
           <Grid columns="1">
