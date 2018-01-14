@@ -3,6 +3,7 @@ import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProductio
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { navigationEpic } from './navigation';
 import { applicationsEpics } from './applications';
+import { projectsEpics } from './projects';
 import createHistory from 'history/createBrowserHistory';
 import { routerMiddleware } from 'react-router-redux';
 
@@ -10,7 +11,8 @@ export const history = createHistory();
 
 const rootEpic = combineEpics(
   applicationsEpics,
-  navigationEpic
+  navigationEpic,
+  projectsEpics
 );
 
 const dependencies = {

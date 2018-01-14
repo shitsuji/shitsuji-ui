@@ -31,9 +31,12 @@ export function loadApplicationsEpic(action$: Observable<Action>, store: Store, 
     ofType(LOAD_APPLICATIONS_REQUEST),
     map((action: LoadApplicationsRequestAction) => action.payload),
     exhaustMap(({ search }) => {
-      history.push({
-        search: queryString.stringify({ search })
-      });
+      const current = queryString.parse(history.location.search);
+      if ((search && search.length) || current.search) {
+        history.push({
+          search: queryString.stringify({ search })
+        });
+      }
 
       return ajax.getJSON(`${BASE_URL}/applications${search ? '?search=' +  search : ''}`).pipe(
         map((res) => loadApplicationsSuccess(res)),
@@ -58,7 +61,7 @@ export function deleteApplicationEpic(action$: Observable<Action>, store: Store,
   return action$.pipe(
     ofType(DELETE_APPLICATION_REQUEST),
     map((action: DeleteApplicationRequestAction) => action.payload),
-    exhaustMap(({ applicationId }) => ajax.post(`${BASE_URL}/applications/${applicationId}`).pipe(
+    exhaustMap(({ applicationId }) => ajax.delete(`${BASE_URL}/applications/${applicationId}`).pipe(
       map(() => deleteApplicationSuccess({ applicationId })),
       catchError((err) => of(deleteApplicationFailure(err)))
     ))

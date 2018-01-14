@@ -40,7 +40,7 @@ export function deleteVersionEpic(action$: Observable<Action>, store: Store, dep
   return action$.pipe(
     ofType(DELETE_VERSION_REQUEST),
     map((action: DeleteVersionRequestAction) => action.payload),
-    exhaustMap(({ versionId, applicationId }) => ajax.post(`${BASE_URL}/versions/${versionId}`).pipe(
+    exhaustMap(({ versionId, applicationId }) => ajax.delete(`${BASE_URL}/versions/${versionId}`).pipe(
       map(() => deleteVersionSuccess({ versionId, applicationId })),
       catchError((err) => of(deleteVersionFailure(err)))
     ))

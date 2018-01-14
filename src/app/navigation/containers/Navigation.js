@@ -5,13 +5,13 @@ import { NavigationLink } from '../components';
 
 export function Navigation() {
   return (
-    <Grid as={Segment} columns={2} doubling inverted attached="top">
-      <Grid.Column verticalAlign="middle">
+    <Grid as={Segment} inverted attached="top">
+      <Grid.Column width="4" verticalAlign="middle">
         <Header as="h1" inverted>
           執事
         </Header>
       </Grid.Column>
-      <Grid.Column textAlign="right">
+      <Grid.Column width="12" textAlign="right">
         <NavigationLink to="/applications">
           Applications
         </NavigationLink>

@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { history } from './middlewares';
 import { Applications, APPLICATIONS_PATH } from './applications';
-import { Projects } from './projects';
+import { Projects, PROJECTS_PATH } from './projects';
 import { Repositories } from './repositories';
 import { Layout } from './layout';
 
@@ -19,7 +19,7 @@ export class App extends Component<{}> {
             <Switch>
               <Route path={APPLICATIONS_PATH} component={Applications} />
 
-              <Route path="/projects" component={Projects} />
+              <Route path={PROJECTS_PATH} component={Projects} />
 
               <Route path="/repositories" component={Repositories} />
 
