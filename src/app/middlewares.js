@@ -7,6 +7,7 @@ import { projectsEpics } from './projects';
 import createHistory from 'history/createBrowserHistory';
 import { routerMiddleware } from 'react-router-redux';
 import { repositoriesEpics } from './repositories';
+import { authEpics } from './auth';
 
 export const history = createHistory();
 
@@ -14,7 +15,8 @@ const rootEpic = combineEpics(
   applicationsEpics,
   navigationEpic,
   projectsEpics,
-  repositoriesEpics
+  repositoriesEpics,
+  authEpics
 );
 
 const dependencies = {

@@ -1,9 +1,20 @@
 // @flow
 import React from 'react';
 import { Grid, Header, Segment } from 'semantic-ui-react';
-import { NavigationLink } from '../components';
+import { NavigationLink, NavigationButton } from '../components';
+import { Dispatch } from 'redux';
+import { logoutRequest } from '../../auth';
+import { connect } from 'react-redux';
 
-export function Navigation() {
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    logout() {
+      dispatch(logoutRequest());
+    }
+  };
+}
+
+export const Navigation = connect(null, mapDispatchToProps)(function (props) {
   return (
     <Grid as={Segment} inverted attached="top">
       <Grid.Column width="4" verticalAlign="middle">
@@ -21,7 +32,10 @@ export function Navigation() {
         <NavigationLink to="/repositories">
           Repositories
         </NavigationLink>
+        <NavigationButton onClick={props.logout}>
+          Logout
+        </NavigationButton>
       </Grid.Column>
     </Grid>
   );
-}
+});
