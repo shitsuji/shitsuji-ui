@@ -11,61 +11,63 @@ import {
   TokenRequestAction,
   tokenSuccess,
   tokenFailure,
-  TOKEN_SUCCESS,
-  LOGIN_SUCCESS,
-  TokenSuccessAction,
-  LoginSuccessAction,
   TOKEN_FAILURE,
   LOGIN_FAILURE,
   LOGOUT_REQUEST
 } from '../actions';
-import { catchError, exhaustMap, map, ignoreElements, tap } from 'rxjs/operators';
-import { ajax } from 'rxjs/observable/dom/ajax';
-import { of } from 'rxjs/observable/of';
-import { BASE_URL } from '../../constants';
-import { History } from 'history';
-import { TOKEN_KEY } from '../index';
+import { exhaustMap, map, ignoreElements, tap } from 'rxjs/operators';
+import { TOKEN_KEY } from '../constants';
+import { Dependencies } from '../../models';
 
-export function loginEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+function setToken(token, axios) {
+  localStorage.setItem(TOKEN_KEY, token);
+  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+}
+
+export function loginEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(LOGIN_REQUEST),
     map((action: LoginRequestAction) => action.payload),
-    exhaustMap((payload) => ajax.post(`${BASE_URL}/auth/login`, payload).pipe(
-      map((res) => loginSuccess(res.response)),
-      catchError((err) => of(loginFailure(err)))
-    ))
+    exhaustMap(async (payload) => {
+      try {
+        const res = await axios.post('/auth/login', payload);
+
+        setToken(res.data.token, axios);
+        return loginSuccess(res.data);
+      } catch (e) {
+        return loginFailure(e);
+      }
+    })
   );
 }
 
-export function tokenEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+export function tokenEpic(action$: Observable<Action>, store: Store, { history, axios }: Dependencies) {
   return action$.pipe(
     ofType(TOKEN_REQUEST),
     map((action: TokenRequestAction) => action.payload),
-    exhaustMap((payload) => ajax.post(`${BASE_URL}/auth/token`, payload, {
-      Authorization: `Bearer ${payload.token}`
-    }).pipe(
-      map((res) => tokenSuccess(res.response)),
-      catchError((err) => of(tokenFailure(err)))
-    ))
+    exhaustMap(async (payload) => {
+      const headers = {
+        Authorization: `Bearer ${payload.token}`
+      };
+      
+      try {
+        const res = await axios.post('/auth/token', payload, { headers });
+
+        setToken(res.data.token, axios);
+        return tokenSuccess(res.data);
+      } catch (e) {
+        return tokenFailure(e);
+      }
+    })
   );
 }
 
-export function setTokenEpic(action$: Observable<Action>, store: Store) {
-  return action$.pipe(
-    ofType(TOKEN_SUCCESS, LOGIN_SUCCESS),
-    map((action: TokenSuccessAction | LoginSuccessAction) => action.payload),
-    tap(({ token }) => {
-      localStorage.setItem(TOKEN_KEY, token);
-    }),
-    ignoreElements()
-  );
-}
-
-export function removeTokenEpic(action$: Observable<Action>, store: Store) {
+export function removeTokenEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(TOKEN_FAILURE, LOGIN_FAILURE, LOGOUT_REQUEST),
     tap(() => {
       localStorage.removeItem(TOKEN_KEY);
+      delete axios.defaults.headers.common.Authorization;
     }),
     ignoreElements()
   );

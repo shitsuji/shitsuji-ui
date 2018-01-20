@@ -10,26 +10,28 @@ import {
   editProjectSuccess,
   editProjectFailure
 } from '../actions';
-import { catchError, exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
-import { ajax } from 'rxjs/observable/dom/ajax';
-import { of } from 'rxjs/observable/of';
-import { BASE_URL } from '../../constants';
+import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { PROJECTS_PATH } from '../constants';
-import { History } from 'history';
 import { getRidAsId } from '../../helpers';
+import { Dependencies } from '../../models';
 
-export function editProjectEpic(action$: Observable<Action>, store: Store, deps: {}) {
+export function editProjectEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(EDIT_PROJECT_REQUEST),
     map((action: EditProjectRequestAction) => action.payload),
-    exhaustMap((payload) => ajax.patch(`${BASE_URL}/projects/${getRidAsId((payload))}`, payload).pipe(
-      map((res) => editProjectSuccess(res.response)),
-      catchError((err) => of(editProjectFailure(err)))
-    ))
+    exhaustMap(async (payload) => {
+      try {
+        const res = await axios.patch(`/projects/${getRidAsId((payload))}`, payload);
+        
+        return editProjectSuccess(res.data);
+      } catch (e) {
+        return editProjectFailure(e);
+      }
+    })
   );
 }
 
-export function navigateToProjectsOnEditEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+export function navigateToProjectsOnEditEpic(action$: Observable<Action>, store: Store, { history }: Dependencies) {
   return action$.pipe(
     ofType(EDIT_PROJECT_SUCCESS),
     map((action: EditProjectSuccessAction) => action.payload),

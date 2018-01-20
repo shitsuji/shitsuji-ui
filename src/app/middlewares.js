@@ -8,8 +8,11 @@ import createHistory from 'history/createBrowserHistory';
 import { routerMiddleware } from 'react-router-redux';
 import { repositoriesEpics } from './repositories';
 import { authEpics } from './auth';
+import * as axios from 'axios';
+import { BASE_URL } from './constants';
 
 export const history = createHistory();
+axios.defaults.baseURL = BASE_URL;
 
 const rootEpic = combineEpics(
   applicationsEpics,
@@ -20,7 +23,8 @@ const rootEpic = combineEpics(
 );
 
 const dependencies = {
-  history
+  history,
+  axios
 };
 
 const epicMiddleware = createEpicMiddleware(rootEpic, { dependencies });

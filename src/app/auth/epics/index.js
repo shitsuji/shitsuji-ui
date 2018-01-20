@@ -1,9 +1,8 @@
 import { combineEpics } from 'redux-observable';
-import { loginEpic, tokenEpic, setTokenEpic, removeTokenEpic } from './AuthEpics';
+import { loginEpic, tokenEpic, removeTokenEpic } from './AuthEpics';
 
 export const authEpics = combineEpics(
   loginEpic,
   tokenEpic,
-  setTokenEpic,
   removeTokenEpic
 );

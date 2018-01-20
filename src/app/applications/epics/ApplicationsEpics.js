@@ -18,53 +18,70 @@ import {
   deleteApplicationSuccess,
   DeleteApplicationRequestAction
 } from '../actions';
-import { catchError, exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
-import { ajax } from 'rxjs/observable/dom/ajax';
-import { of } from 'rxjs/observable/of';
-import { BASE_URL } from '../../constants';
+import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { APPLICATIONS_PATH } from '../constants';
 import { History } from 'history';
 import queryString from 'query-string';
+import { Dependencies } from '../../models';
 
-export function loadApplicationsEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+export function loadApplicationsEpic(action$: Observable<Action>, store: Store, { history, axios }: Dependencies) {
   return action$.pipe(
     ofType(LOAD_APPLICATIONS_REQUEST),
     map((action: LoadApplicationsRequestAction) => action.payload),
-    exhaustMap(({ search }) => {
+    exhaustMap(async ({ search }) => {
       const current = queryString.parse(history.location.search);
-      if ((search && search.length) || current.search) {
+      let params;
+      
+      if ((search && search.length)) {
         history.push({
           search: queryString.stringify({ search })
         });
-      }
 
-      return ajax.getJSON(`${BASE_URL}/applications${search ? '?search=' +  search : ''}`).pipe(
-        map((res) => loadApplicationsSuccess(res)),
-        catchError((err) => of(loadApplicationsFailure(err)))
-      );
+        params = { search };
+      } else if (current.search) {
+        history.push({});
+      }
+      
+      try {
+        const res = await axios.get('/applications', { params });
+
+        return loadApplicationsSuccess(res.data);
+      } catch (e) {
+        return loadApplicationsFailure(e);
+      }
     })
   );
 }
 
-export function createApplicationEpic(action$: Observable<Action>, store: Store, deps: {}) {
+export function createApplicationEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(CREATE_APPLICATION_REQUEST),
     map((action: CreateApplicationRequestAction) => action.payload),
-    exhaustMap((payload) => ajax.post(`${BASE_URL}/applications`, payload).pipe(
-      map((res) => createApplicationSuccess(res.response)),
-      catchError((err) => of(createApplicationFailure(err)))
-    ))
+    exhaustMap(async (payload) => {
+      try {
+        const res = await axios.post('/applications', payload);
+
+        return createApplicationSuccess(res.data);
+      } catch (e) {
+        return createApplicationFailure(e);
+      }
+    })
   );
 }
 
-export function deleteApplicationEpic(action$: Observable<Action>, store: Store, deps: {}) {
+export function deleteApplicationEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(DELETE_APPLICATION_REQUEST),
     map((action: DeleteApplicationRequestAction) => action.payload),
-    exhaustMap(({ applicationId }) => ajax.delete(`${BASE_URL}/applications/${applicationId}`).pipe(
-      map(() => deleteApplicationSuccess({ applicationId })),
-      catchError((err) => of(deleteApplicationFailure(err)))
-    ))
+    exhaustMap(async ({ applicationId }) => {
+      try {
+        await axios.delete(`/applications/${applicationId}`);
+  
+        return deleteApplicationSuccess({ applicationId });
+      } catch (e) {
+        return deleteApplicationFailure(e);
+      }
+    })
   );
 }
 

@@ -10,26 +10,28 @@ import {
   editApplicationSuccess,
   editApplicationFailure
 } from '../actions';
-import { catchError, exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
-import { ajax } from 'rxjs/observable/dom/ajax';
-import { of } from 'rxjs/observable/of';
-import { BASE_URL } from '../../constants';
+import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { APPLICATIONS_PATH } from '../constants';
-import { History } from 'history';
 import { getRidAsId } from '../../helpers';
+import { Dependencies } from '../../models';
 
-export function editApplicationEpic(action$: Observable<Action>, store: Store, deps: {}) {
+export function editApplicationEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(EDIT_APPLICATION_REQUEST),
     map((action: EditApplicationRequestAction) => action.payload),
-    exhaustMap((payload) => ajax.patch(`${BASE_URL}/applications/${getRidAsId((payload))}`, payload).pipe(
-      map((res) => editApplicationSuccess(res.response)),
-      catchError((err) => of(editApplicationFailure(err)))
-    ))
+    exhaustMap(async (payload) => {
+      try {
+        const res = await axios.patch(`/applications/${getRidAsId((payload))}`, payload);
+
+        return editApplicationSuccess(res.data);
+      } catch (e) {
+        return editApplicationFailure(e);
+      }
+    })
   );
 }
 
-export function navigateToApplicationsOnEditEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+export function navigateToApplicationsOnEditEpic(action$: Observable<Action>, store: Store, { history }: Dependencies) {
   return action$.pipe(
     ofType(EDIT_APPLICATION_SUCCESS),
     map((action: EditApplicationSuccessAction) => action.payload),

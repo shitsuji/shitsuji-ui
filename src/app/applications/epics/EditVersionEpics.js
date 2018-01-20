@@ -10,26 +10,28 @@ import {
   editVersionSuccess,
   editVersionFailure
 } from '../actions';
-import { catchError, exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
-import { ajax } from 'rxjs/observable/dom/ajax';
-import { of } from 'rxjs/observable/of';
-import { BASE_URL } from '../../constants';
+import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { APPLICATIONS_PATH } from '../constants';
-import { History } from 'history';
 import { getRidAsId } from '../../helpers';
+import { Dependencies } from '../../models';
 
-export function editVersionEpic(action$: Observable<Action>, store: Store, deps: {}) {
+export function editVersionEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(EDIT_VERSION_REQUEST),
     map((action: EditVersionRequestAction) => action.payload),
-    exhaustMap(({ applicationId, version }) => ajax.patch(`${BASE_URL}/versions/${getRidAsId((version))}`, version).pipe(
-      map((res) => editVersionSuccess({ applicationId, version: res.response })),
-      catchError((err) => of(editVersionFailure(err)))
-    ))
+    exhaustMap(async ({ applicationId, version }) => {
+      try {
+        const res = await axios.patch(`/versions/${getRidAsId((version))}`, version);
+
+        return editVersionSuccess({ applicationId, version: res.data });
+      } catch (e) {
+        return editVersionFailure(e);
+      }
+    })
   );
 }
 
-export function navigateToVersionsOnEditEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+export function navigateToVersionsOnEditEpic(action$: Observable<Action>, store: Store, { history }: Dependencies) {
   return action$.pipe(
     ofType(EDIT_VERSION_SUCCESS),
     map((action: EditVersionSuccessAction) => action.payload),

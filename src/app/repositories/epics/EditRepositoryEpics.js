@@ -10,26 +10,28 @@ import {
   editRepositorySuccess,
   editRepositoryFailure
 } from '../actions';
-import { catchError, exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
-import { ajax } from 'rxjs/observable/dom/ajax';
-import { of } from 'rxjs/observable/of';
-import { BASE_URL } from '../../constants';
+import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { REPOSITORIES_PATH } from '../constants';
-import { History } from 'history';
 import { getRidAsId } from '../../helpers';
+import { Dependencies } from '../../models';
 
-export function editRepositoryEpic(action$: Observable<Action>, store: Store, deps: {}) {
+export function editRepositoryEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(EDIT_REPOSITORY_REQUEST),
     map((action: EditRepositoryRequestAction) => action.payload),
-    exhaustMap((payload) => ajax.patch(`${BASE_URL}/repositories/${getRidAsId((payload))}`, payload).pipe(
-      map((res) => editRepositorySuccess(res.response)),
-      catchError((err) => of(editRepositoryFailure(err)))
-    ))
+    exhaustMap(async (payload) => {
+      try {
+        const res = await axios.patch(`/repositories/${getRidAsId((payload))}`, payload);
+
+        return editRepositorySuccess(res.data);
+      } catch (e) {
+        return editRepositoryFailure(e);
+      }
+    })
   );
 }
 
-export function navigateToRepositoriesOnEditEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+export function navigateToRepositoriesOnEditEpic(action$: Observable<Action>, store: Store, { history }: Dependencies) {
   return action$.pipe(
     ofType(EDIT_REPOSITORY_SUCCESS),
     map((action: EditRepositorySuccessAction) => action.payload),

@@ -4,6 +4,8 @@ import { RouterState } from 'react-router-redux';
 import { ProjectsState, ProjectDetailsState } from './projects';
 import { RepositoriesState, RepositoryDetailsState } from './repositories';
 import { AuthState } from './auth';
+import { History } from 'history';
+import { AxiosStatic } from 'axios';
 
 export interface RootState {
   auth: AuthState;
@@ -14,6 +16,11 @@ export interface RootState {
   projectDetails: ProjectDetailsState;
   repositories: RepositoriesState;
   repositoryDetails: RepositoryDetailsState;
+}
+
+export interface Dependencies {
+  history: History;
+  axios: AxiosStatic;
 }
 
 export interface Record {

@@ -5,6 +5,7 @@ import { NavigationLink, NavigationButton } from '../components';
 import { Dispatch } from 'redux';
 import { logoutRequest } from '../../auth';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
@@ -14,7 +15,7 @@ function mapDispatchToProps(dispatch: Dispatch) {
   };
 }
 
-export const Navigation = connect(null, mapDispatchToProps)(function (props) {
+export const Navigation = withRouter(connect(null, mapDispatchToProps)(function (props) {
   return (
     <Grid as={Segment} inverted attached="top">
       <Grid.Column width="4" verticalAlign="middle">
@@ -38,4 +39,4 @@ export const Navigation = connect(null, mapDispatchToProps)(function (props) {
       </Grid.Column>
     </Grid>
   );
-});
+}));

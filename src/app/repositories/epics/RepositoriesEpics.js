@@ -18,57 +18,73 @@ import {
   CREATE_REPOSITORY_SUCCESS,
   DELETE_REPOSITORY_SUCCESS
 } from '../actions';
-import { catchError, exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
-import { ajax } from 'rxjs/observable/dom/ajax';
-import { of } from 'rxjs/observable/of';
-import { BASE_URL } from '../../constants';
+import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { REPOSITORIES_PATH } from '../constants';
-import { History } from 'history';
 import queryString from 'query-string';
+import { Dependencies } from '../../models';
 
-export function loadRepositoriesEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+export function loadRepositoriesEpic(action$: Observable<Action>, store: Store, { history, axios }: Dependencies) {
   return action$.pipe(
     ofType(LOAD_REPOSITORIES_REQUEST),
     map((action: LoadRepositoriesRequestAction) => action.payload),
-    exhaustMap(({ search }) => {
+    exhaustMap(async ({ search }) => {
       const current = queryString.parse(history.location.search);
-      if ((search && search.length) || current.search) {
+      let params;
+
+      if ((search && search.length)) {
         history.push({
           search: queryString.stringify({ search })
         });
+
+        params = { search };
+      } else if (current.search) {
+        history.push({});
       }
 
-      return ajax.getJSON(`${BASE_URL}/repositories${search ? '?search=' +  search : ''}`).pipe(
-        map((res) => loadRepositoriesSuccess(res)),
-        catchError((err) => of(loadRepositoriesFailure(err)))
-      );
+      try {
+        const res = await axios.get('/repositories', { params });
+
+        return loadRepositoriesSuccess(res.data);
+      } catch (e) {
+        return loadRepositoriesFailure(e);
+      }
     })
   );
 }
 
-export function createRepositoryEpic(action$: Observable<Action>, store: Store, deps: {}) {
+export function createRepositoryEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(CREATE_REPOSITORY_REQUEST),
     map((action: CreateRepositoryRequestAction) => action.payload),
-    exhaustMap((payload) => ajax.post(`${BASE_URL}/repositories`, payload).pipe(
-      map((res) => createRepositorySuccess(res.response)),
-      catchError((err) => of(createRepositoryFailure(err)))
-    ))
+    exhaustMap(async (payload) => {
+      try {
+        const res = await axios.post('/repositories', payload);
+
+        return createRepositorySuccess(res.data);
+      } catch (e) {
+        return createRepositoryFailure(e);
+      }
+    })
   );
 }
 
-export function deleteRepositoryEpic(action$: Observable<Action>, store: Store, deps: {}) {
+export function deleteRepositoryEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(DELETE_REPOSITORY_REQUEST),
     map((action: DeleteRepositoryRequestAction) => action.payload),
-    exhaustMap(({ repositoryId }) => ajax.delete(`${BASE_URL}/repositories/${repositoryId}`).pipe(
-      map(() => deleteRepositorySuccess({ repositoryId })),
-      catchError((err) => of(deleteRepositoryFailure(err)))
-    ))
+    exhaustMap(async ({ repositoryId }) => {
+      try {
+        await axios.delete(`/repositories/${repositoryId}`);
+
+        return deleteRepositorySuccess({ repositoryId });
+      } catch (e) {
+        return deleteRepositoryFailure(e);
+      }
+    })
   );
 }
 
-export function navigateToRepositoriesOnSuccessEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+export function navigateToRepositoriesOnSuccessEpic(action$: Observable<Action>, store: Store, { history }: Dependencies) {
   return action$.pipe(
     ofType(CREATE_REPOSITORY_SUCCESS, DELETE_REPOSITORY_SUCCESS),
     tap(() => {

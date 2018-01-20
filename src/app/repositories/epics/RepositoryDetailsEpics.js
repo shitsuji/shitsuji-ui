@@ -2,30 +2,29 @@
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from 'redux';
 import { ofType } from 'redux-observable';
-import { catchError, exhaustMap, map } from 'rxjs/operators';
-import { ajax } from 'rxjs/observable/dom/ajax';
-import { zip } from 'rxjs/observable/zip';
-import { of } from 'rxjs/observable/of';
+import { exhaustMap, map } from 'rxjs/operators';
 import {
   LOAD_REPOSITORY_DETAILS_REQUEST,
   LoadRepositoryDeatilsRequestAction,
   loadRepositoryDeatilsSuccess,
   loadRepositoryDeatilsFailure
 } from '../actions';
-import { BASE_URL } from '../../constants';
+import { Dependencies } from '../../models';
 
-export function loadRepositoryDetailsEpic(action$: Observable<Action>, store: Store, { history }: { history: History }) {
+export function loadRepositoryDetailsEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(LOAD_REPOSITORY_DETAILS_REQUEST),
     map((action: LoadRepositoryDeatilsRequestAction) => action.payload),
-    exhaustMap(({ repositoryId }) => {
-      return zip(
-        ajax.getJSON(`${BASE_URL}/repositories/${repositoryId}`),
-        (repository) => ({ repository })
-      ).pipe(
-        map((res) => loadRepositoryDeatilsSuccess(res)),
-        catchError((err) => of(loadRepositoryDeatilsFailure(err)))
-      );
+    exhaustMap(async ({ repositoryId }) => {
+      try {
+        const res = await axios.get(`/repositories/${repositoryId}`);
+
+        return loadRepositoryDeatilsSuccess({
+          repository: res.data
+        });
+      } catch (e) {
+        return loadRepositoryDeatilsFailure(e);
+      }
     })
   );
 }
