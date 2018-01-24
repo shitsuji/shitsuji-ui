@@ -3,6 +3,7 @@ import React from 'react';
 import { Route, Redirect, Switch, withRouter } from 'react-router';
 import { Applications, APPLICATIONS_PATH } from './applications';
 import { Projects, PROJECTS_PATH } from './projects';
+import { Users, USERS_PATH } from './users';
 import { Repositories, REPOSITORIES_PATH } from './repositories';
 import { Layout } from './layout';
 import { Auth, tokenRequest, AUTH_PATH } from './auth';
@@ -65,6 +66,8 @@ export const App = withRouter(connect(mapStateToProps, mapDispatchToProps)(class
           <Route path={PROJECTS_PATH} component={Projects} />
   
           <Route path={REPOSITORIES_PATH} component={Repositories} />
+
+          <Route path={USERS_PATH} component={Users} />
   
           <Redirect to={APPLICATIONS_PATH} />
         </Switch>

@@ -33,6 +33,9 @@ export const Navigation = withRouter(connect(null, mapDispatchToProps)(function 
         <NavigationLink to="/repositories">
           Repositories
         </NavigationLink>
+        <NavigationLink to="/users">
+          Users
+        </NavigationLink>
         <NavigationButton onClick={props.logout}>
           Logout
         </NavigationButton>

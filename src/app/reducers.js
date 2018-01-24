@@ -5,6 +5,7 @@ import { applicationsReducer, applicationDetailsReducer } from './applications';
 import { projectsReducer, projectDetailsReducer } from './projects';
 import { repositoriesReducer, repositoryDetailsReducer } from './repositories';
 import { authReducer } from './auth';
+import { usersReducer, userDetailsReducer } from './users';
 
 export const rootReducer = combineReducers({
   auth: authReducer,
@@ -14,5 +15,7 @@ export const rootReducer = combineReducers({
   projects: projectsReducer,
   projectDetails: projectDetailsReducer,
   repositories: repositoriesReducer,
-  repositoryDetails: repositoryDetailsReducer
+  repositoryDetails: repositoryDetailsReducer,
+  users: usersReducer,
+  userDetails: userDetailsReducer
 });

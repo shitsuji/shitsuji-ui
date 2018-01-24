@@ -10,6 +10,7 @@ import { repositoriesEpics } from './repositories';
 import { authEpics } from './auth';
 import * as axios from 'axios';
 import { BASE_URL } from './constants';
+import { usersEpics } from './users';
 
 export const history = createHistory();
 axios.defaults.baseURL = BASE_URL;
@@ -19,7 +20,8 @@ const rootEpic = combineEpics(
   navigationEpic,
   projectsEpics,
   repositoriesEpics,
-  authEpics
+  authEpics,
+  usersEpics
 );
 
 const dependencies = {

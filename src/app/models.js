@@ -6,6 +6,7 @@ import { RepositoriesState, RepositoryDetailsState } from './repositories';
 import { AuthState } from './auth';
 import { History } from 'history';
 import { AxiosStatic } from 'axios';
+import { UsersState, UserDetailsState } from './users';
 
 export interface RootState {
   auth: AuthState;
@@ -16,6 +17,8 @@ export interface RootState {
   projectDetails: ProjectDetailsState;
   repositories: RepositoriesState;
   repositoryDetails: RepositoryDetailsState;
+  users: UsersState;
+  userDetails: UserDetailsState;
 }
 
 export interface Dependencies {

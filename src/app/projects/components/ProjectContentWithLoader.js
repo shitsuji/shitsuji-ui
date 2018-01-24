@@ -1,4 +1,3 @@
-
 import { ProjectContent } from './ProjectContent';
 import { WithLoader } from '../../shared';
 
