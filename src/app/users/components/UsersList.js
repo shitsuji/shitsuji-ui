@@ -16,7 +16,7 @@ export interface UserListProps {
   users: User[];
 }
 
-export function UserList(props: UserListProps) {
+export function UsersList(props: UserListProps) {
   const users = props.users || [];
 
   if (users.length < 1) {
