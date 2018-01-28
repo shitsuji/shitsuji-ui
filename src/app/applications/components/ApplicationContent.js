@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { Segment, Header, Grid, Divider, Button, Icon, Popup } from 'semantic-ui-react';
-import { Application, Version } from '../models';
+import { Application, Version, Dependency } from '../models';
 import { VersionList } from './VersionList';
 import { VersionContent } from './VersionContent';
 import { TextTruncate } from '../../shared';
@@ -13,13 +13,15 @@ export interface ApplicationContentProps {
   application: Application;
   versions: Version[];
   selectedVersion: ?Version;
+  dependees: Dependency[];
+  dependers: Dependency[];
   onSelect: (version: Version) => void;
   onDeleteApplication: (applicationId: string) => void;
   onDeleteVersion: (payload: { applicationId: string, versionId: string }) => void;
 }
 
 export function ApplicationContent(props: ApplicationContentProps) {
-  const { application, versions, selectedVersion } = props;
+  const { application, versions, selectedVersion, dependees, dependers } = props;
   const emptyContentMessage = 'Please select version from the list or create a new one :)';
   const applicationId = getRidAsId(application);
 
@@ -70,6 +72,8 @@ export function ApplicationContent(props: ApplicationContentProps) {
                 application={application}
                 version={selectedVersion}
                 onDeleteVersion={props.onDeleteVersion}
+                dependees={dependees}
+                dependers={dependers}
               /> :
               emptyContentMessage
             }

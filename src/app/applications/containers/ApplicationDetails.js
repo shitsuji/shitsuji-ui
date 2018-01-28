@@ -7,7 +7,7 @@ import { match } from 'react-router';
 import { Dispatch } from 'redux';
 import {
   loadApplicationDeatilsRequest,
-  selectVersion,
+  selectVersionRequest,
   deleteApplicationRequest,
   deleteVersionRequest
 } from '../actions';
@@ -31,7 +31,7 @@ function mapDispatchToProps(dispatch: Dispatch) {
       dispatch(loadApplicationDeatilsRequest({ applicationId }));
     },
     selectVersion: (version: Version) => {
-      dispatch(selectVersion(version));
+      dispatch(selectVersionRequest(version));
     },
     deleteApplication: (applicationId: string) => {
       dispatch(deleteApplicationRequest({ applicationId }));
@@ -63,7 +63,7 @@ export const ApplicationDetails = connect(mapStateToProps, mapDispatchToProps)(c
   }
 
   render() {
-    const { application, versions, pending, selectedVersionId } = this.props.applicationDetails;
+    const { application, versions, pending, selectedVersionId, dependees, dependers } = this.props.applicationDetails;
     const selectedVersion = versions && versions.find((v) => getRidAsId(v) === selectedVersionId);
     const { path } = this.props.match;
 
@@ -72,6 +72,8 @@ export const ApplicationDetails = connect(mapStateToProps, mapDispatchToProps)(c
       versions,
       pending,
       selectedVersion,
+      dependees,
+      dependers,
       onSelect: this.props.selectVersion,
       onDeleteApplication: this.props.deleteApplication,
       onDeleteVersion: this.props.deleteVersion

@@ -9,7 +9,10 @@ export const APPLICATIONS_INITIAL_STATE: ApplicationsState = {
 export const APPLICATION_DETAILS_INITIAL_STATE: ApplicationDetailsState = {
   application: null,
   pending: true,
-  versions: null
+  versions: null,
+  selectedVersionId: null,
+  dependees: null,
+  dependers: null
 };
 
 export const APPLICATIONS_PATH = '/applications';

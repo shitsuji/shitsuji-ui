@@ -29,6 +29,11 @@ export interface Version extends VersionCreateData, Record {
   commit?: Commit;
 }
 
+export interface Dependency {
+  version: Version;
+  application: Application;
+}
+
 export interface ApplicationsState {
   applications: ?Application[];
   pending: boolean;
@@ -39,4 +44,6 @@ export interface ApplicationDetailsState {
   pending: boolean;
   versions: ?Version[];
   selectedVersionId: ?string;
+  dependees?: Dependency[];
+  dependers?: Dependency[];
 }

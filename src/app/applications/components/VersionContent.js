@@ -1,17 +1,20 @@
 // @flow
 import React from 'react';
 import { Button, Grid, Header, Icon, Popup } from 'semantic-ui-react';
-import { Version, Application } from '../models';
+import { Version, Application, Dependency } from '../models';
 import { formatDate } from '../../helpers';
 import { CommitContent } from './CommitContent';
 import { getRidAsId } from '../../helpers';
 import { Link } from 'react-router-dom';
 import { APPLICATIONS_PATH, VERSIONS_PATH } from '../constants';
 import { TextTruncate } from '../../shared';
+import { DependenciesList } from './DependenciesList';
 
 export interface VersionContentProps {
   application: Application;
   version: Version;
+  dependees: Dependency[];
+  dependers: Dependency[];
   onDeleteVersion: (payload: { applicationId: string, versionId: string }) => void;
 }
 
@@ -68,7 +71,7 @@ export function VersionContent(props: VersionContentProps) {
           <Header as="h3">
             Depends on
           </Header>
-          Here goes dependencies list on which this app depends
+          <DependenciesList dependencies={props.dependees} />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
@@ -76,7 +79,7 @@ export function VersionContent(props: VersionContentProps) {
           <Header as="h3">
             Required by
           </Header>
-          Here goes dependencies list which require this version
+          <DependenciesList dependencies={props.dependers} />
         </Grid.Column>
       </Grid.Row>
     </Grid>

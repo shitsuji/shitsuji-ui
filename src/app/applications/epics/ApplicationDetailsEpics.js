@@ -7,9 +7,14 @@ import {
   LOAD_APPLICATION_DETAILS_REQUEST,
   LoadApplicationDeatilsRequestAction,
   loadApplicationDeatilsSuccess,
-  loadApplicationDeatilsFailure
+  loadApplicationDeatilsFailure,
+  SELECT_VERSION_REQUEST,
+  SelectVersionRequestAction,
+  selectVersionSuccess,
+  selectVersionFailure
 } from '../actions';
 import { Dependencies } from '../../models';
+import { getRidAsId } from '../../helpers';
 
 export function loadApplicationDetailsEpic(action$: Observable<Action>, store: Store, { history, axios }: Dependencies) {
   return action$.pipe(
@@ -28,6 +33,30 @@ export function loadApplicationDetailsEpic(action$: Observable<Action>, store: S
         });
       } catch (e) {
         return loadApplicationDeatilsFailure(e);
+      }
+    })
+  );
+}
+
+export function selectVersionEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
+  return action$.pipe(
+    ofType(SELECT_VERSION_REQUEST),
+    map((action: SelectVersionRequestAction) => action.payload),
+    exhaustMap(async (version) => {
+      try {
+        const versionId = getRidAsId(version);
+
+        const [ dependees, dependers ] = await Promise.all([
+          axios.get(`/versions/${versionId}/dependees`),
+          axios.get(`/versions/${versionId}/dependers`)
+        ]);
+
+        return selectVersionSuccess({
+          dependees: dependees.data,
+          dependers: dependers.data
+        });
+      } catch (e) {
+        return selectVersionFailure(e);
       }
     })
   );

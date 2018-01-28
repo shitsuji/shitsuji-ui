@@ -5,7 +5,9 @@ import {
   LOAD_APPLICATION_DETAILS_REQUEST,
   LOAD_APPLICATION_DETAILS_SUCCESS,
   LOAD_APPLICATION_DETAILS_FAILURE,
-  SELECT_VERSION,
+  SELECT_VERSION_REQUEST,
+  SELECT_VERSION_SUCCESS,
+  SELECT_VERSION_FAILURE,
   CREATE_VERSION_SUCCESS,
   CreateVersionSuccessAction,
   DELETE_APPLICATION_REQUEST,
@@ -37,17 +39,27 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
     ...state,
     ...payload,
     pending: false,
-    selectedVersionId: payload.versions && payload.versions.length ?
-      getRidAsId(payload.versions[0]) :
-      null
+    // selectedVersionId: payload.versions && payload.versions.length ?
+    //   getRidAsId(payload.versions[0]) :
+    //   null
   }),
   [LOAD_APPLICATION_DETAILS_FAILURE]: (state) => ({
     ...state,
     pending: false
   }),
-  [SELECT_VERSION]: (state, { payload }) => ({
+  [SELECT_VERSION_REQUEST]: (state, { payload }) => ({
     ...state,
+    pending: true,
     selectedVersionId: getRidAsId(payload)
+  }),
+  [SELECT_VERSION_SUCCESS]: (state, { payload }) => ({
+    ...state,
+    ...payload,
+    pending: false,
+  }),
+  [SELECT_VERSION_FAILURE]: (state, { payload }) => ({
+    ...state,
+    pending: false
   }),
   [CREATE_VERSION_SUCCESS]: (state: ApplicationDetailsState, { payload }: CreateVersionSuccessAction) => {
     if (!state.application || !state.versions || getRidAsId(state.application) !== payload.applicationId) {
