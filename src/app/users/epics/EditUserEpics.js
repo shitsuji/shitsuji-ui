@@ -36,7 +36,7 @@ export function navigateToUsersOnEditEpic(action$: Observable<Action>, store: St
     ofType(EDIT_USER_SUCCESS),
     map((action: EditUserSuccessAction) => action.payload),
     tap((user) => {
-      history.push(`${USERS_PATH}/${getRidAsId(user)}`);
+      history.push(`${USERS_PATH}`);
     }),
     ignoreElements()
   );

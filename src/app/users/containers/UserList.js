@@ -5,7 +5,7 @@ import { RootState } from '../../models';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { UsersState } from '../models';
-import { loadUsersRequest } from '../actions';
+import { loadUsersRequest, deleteUserRequest } from '../actions';
 import { Grid, Button, Input, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { CREATE_USER_PATH } from '../constants';
@@ -14,21 +14,33 @@ import queryString from 'query-string';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { debounceTime } from 'rxjs/operators';
+import { AuthState } from '../../auth';
 
-function mapStateToProps({ users, router }: RootState) {
-  return { users, router };
+function mapStateToProps({ users, router, auth }: RootState) {
+  return { users, router, auth };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
     loadUsers(search) {
       return dispatch(loadUsersRequest({ search }));
+    },
+    deleteUser: (userId: string) => {
+      dispatch(deleteUserRequest({ userId }));
     }
   };
 }
 
+export interface UserListProps {
+  auth: AuthState;
+  users: UsersState;
+  router: RouterState;
+  loadUsers: (search: string) => {};
+  deleteUser: (userId: string) => {};
+}
+
 export const UserList = connect(mapStateToProps, mapDispatchToProps)(
-  class extends React.PureComponent<{ users: UsersState, router: RouterState } & { loadUsers: (search: string) => {} }> {
+  class extends React.PureComponent<UserListProps> {
     search$: Subject<string>;
     searchSubscription: Subscription;
 
@@ -68,6 +80,7 @@ export const UserList = connect(mapStateToProps, mapDispatchToProps)(
 
     render() {
       const { users, pending } = this.props.users;
+      const { user } = this.props.auth;
       const search = this.getSearch();
 
       return (
@@ -93,7 +106,7 @@ export const UserList = connect(mapStateToProps, mapDispatchToProps)(
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width="16">
-              <UsersListWithLoader users={users} pending={pending} />
+              <UsersListWithLoader users={users} currentUser={user} pending={pending} onDeleteUser={this.props.deleteUser} />
             </Grid.Column>
           </Grid.Row>
         </Grid>

@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom';
 import { USERS_PATH } from '../index';
 import { RootState } from '../../models';
 import { WithLoader } from '../../shared';
-import { getRidAsId } from '../../helpers';
 
 function mapStateToProps({ userDetails }: RootState) {
   const { user, pending } = userDetails;
@@ -45,7 +44,7 @@ export const EditUser = enhance(
       return (
         <Grid columns="1">
           <Grid.Column>
-            <Button as={Link} to={`${USERS_PATH}/${getRidAsId(this.props.user)}`} icon labelPosition="left">
+            <Button as={Link} to={`${USERS_PATH}`} icon labelPosition="left">
               <Icon name="chevron left" />
               Go back
             </Button>

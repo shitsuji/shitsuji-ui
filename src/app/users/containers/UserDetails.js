@@ -5,14 +5,10 @@ import { RootState } from '../../models';
 import { UserDetailsState } from '../models';
 import { match } from 'react-router';
 import { Dispatch } from 'redux';
-import {
-  loadUserDeatilsRequest,
-  deleteUserRequest
-} from '../actions';
-import { Grid, Button, Icon } from 'semantic-ui-react';
+import { loadUserDeatilsRequest } from '../actions';
+import { Grid, Button, Icon, Loader } from 'semantic-ui-react';
 import { USERS_PATH } from '../constants';
-import { Link, Switch, Route } from 'react-router-dom';
-import { UserContentWithLoader } from '../components';
+import { Link, Switch, Route, Redirect } from 'react-router-dom';
 import { getRidAsId } from '../../helpers';
 import { EditUser } from './EditUser';
 import { NotFoundWrapper } from '../../shared';
@@ -25,9 +21,6 @@ function mapDispatchToProps(dispatch: Dispatch) {
   return {
     loadUserDetails: (userId: string) => {
       dispatch(loadUserDeatilsRequest({ userId }));
-    },
-    deleteUser: (userId: string) => {
-      dispatch(deleteUserRequest({ userId }));
     }
   };
 }
@@ -36,7 +29,6 @@ export interface UserDetailsProps {
   userDetails: UserDetailsState;
   match: match<{ userId: string }>;
   loadUserDetails: (userId: string) => void;
-  deleteUser: (userId: string) => void;
 }
 
 export const UserDetails = connect(mapStateToProps, mapDispatchToProps)(class extends React.PureComponent<UserDetailsProps> {
@@ -54,15 +46,16 @@ export const UserDetails = connect(mapStateToProps, mapDispatchToProps)(class ex
     const { user, pending } = this.props.userDetails;
     const { path } = this.props.match;
 
-    const contentProps = {
-      user,
-      pending,
-      onDeleteUser: this.props.deleteUser
-    };
+    if (pending) {
+      return (<Loader active />);
+    }
 
     return (
       <Switch>
-        <Route path={`${path}/edit`} component={EditUser} />
+        {
+          user &&
+            <Route path={`${path}/edit`} component={EditUser} />
+        }
 
         <Route render={() =>
           <Grid columns="1">
@@ -74,9 +67,9 @@ export const UserDetails = connect(mapStateToProps, mapDispatchToProps)(class ex
             </Grid.Column>
             <Grid.Column>
               {
-                !pending && !user ?
+                !user ?
                   <NotFoundWrapper>User not found :(</NotFoundWrapper> :
-                  <UserContentWithLoader {...contentProps}/>
+                  <Redirect to={USERS_PATH} />
               }
             </Grid.Column>
           </Grid>
