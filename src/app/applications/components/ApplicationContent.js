@@ -34,6 +34,10 @@ export function ApplicationContent(props: ApplicationContentProps) {
               <TextTruncate>
                 {application.name}
               </TextTruncate>
+              {
+                application.isGenerated &&
+                <Header.Subheader>(Generated)</Header.Subheader>
+              }
             </Header>
           </Grid.Column>
           <Grid.Column textAlign="right" width="5">

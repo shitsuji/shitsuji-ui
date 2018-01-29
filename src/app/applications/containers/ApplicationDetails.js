@@ -62,6 +62,15 @@ export const ApplicationDetails = connect(mapStateToProps, mapDispatchToProps)(c
     this.props.loadApplicationDetails(applicationId);
   }
 
+  componentWillReceiveProps(newProps: ApplicationDetailsProps) {
+    const { applicationId } = newProps.match.params;
+    if (applicationId === this.props.match.params.applicationId) {
+      return;
+    }
+
+    this.props.loadApplicationDetails(applicationId);
+  }
+
   render() {
     const { application, versions, pending, selectedVersionId, dependees, dependers } = this.props.applicationDetails;
     const selectedVersion = versions && versions.find((v) => getRidAsId(v) === selectedVersionId);

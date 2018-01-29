@@ -3,6 +3,9 @@ import React from 'react';
 import { List, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { Dependency } from '../models';
+import { getRidAsId } from '../../helpers';
+import { Link } from 'react-router-dom';
+import { APPLICATIONS_PATH } from '../constants';
 
 const EmptyParagraph = styled.p`
   color: grey;
@@ -24,7 +27,7 @@ export function DependenciesList(props: DependenciesListProps) {
   }
 
   const items = dependencies.map(({ application, version }) => (
-    <List.Item key={application.key + version.number}>
+    <List.Item as={Link} to={`${APPLICATIONS_PATH}/${getRidAsId(application)}`} key={application.key + version.number}>
       <List.Content>
         <Header as="h4">
           {application.name} @ {version.number}

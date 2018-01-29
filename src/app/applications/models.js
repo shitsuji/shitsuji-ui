@@ -13,7 +13,6 @@ export interface VersionCreateData {
 export interface Application extends ApplicationCreateData, Record {
   createdAt: Date;
   isGenerated: boolean;
-  isLegacy: boolean;
   repository: any;
 }
 
