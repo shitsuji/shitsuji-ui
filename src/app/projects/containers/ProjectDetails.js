@@ -48,11 +48,12 @@ export const ProjectDetails = connect(mapStateToProps, mapDispatchToProps)(class
   }
 
   render() {
-    const { project, pending } = this.props.projectDetails;
+    const { project, pending, applications } = this.props.projectDetails;
     const { path } = this.props.match;
 
     const contentProps = {
       project,
+      applications,
       pending,
       onDeleteProject: this.props.deleteProject
     };

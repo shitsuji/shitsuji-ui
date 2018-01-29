@@ -1,11 +1,10 @@
 // @flow
 import React from 'react';
-import { List, Segment, Header } from 'semantic-ui-react';
+import { List, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { Dependency } from '../models';
 
-const EmptySegment = styled(Segment)`
-  text-align: center;
+const EmptyParagraph = styled.p`
   color: grey;
 `;
 
@@ -18,9 +17,9 @@ export function DependenciesList(props: DependenciesListProps) {
 
   if (dependencies.length < 1) {
     return (
-      <EmptySegment basic>
+      <EmptyParagraph>
         No dependencies here :)
-      </EmptySegment>
+      </EmptyParagraph>
     );
   }
 

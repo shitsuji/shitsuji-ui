@@ -1,5 +1,6 @@
 // @flow
 import { Record } from '../models';
+import { Application } from '../applications';
 
 export interface ProjectCreateData {
   name: string;
@@ -16,5 +17,6 @@ export interface ProjectsState {
 
 export interface ProjectDetailsState {
   project: ?Project;
+  applications: ?Application[];
   pending: boolean;
 }

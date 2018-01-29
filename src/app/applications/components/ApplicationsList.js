@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
-import { List, Segment, Header } from 'semantic-ui-react';
+import { List, Header } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { Application } from '../models';
 import { Link } from 'react-router-dom';
 import { APPLICATIONS_PATH } from '../index';
 import { getRidAsId, formatDate } from '../../helpers';
 
-const EmptySegment = styled(Segment)`
+const EmptyParagraph = styled.p`
   text-align: center;
   color: grey;
 `;
@@ -25,9 +25,9 @@ export function ApplicationsList(props: ApplicationsListProps) {
 
   if (applications.length < 1) {
     return (
-      <EmptySegment color="blue">
+      <EmptyParagraph color="blue">
         No apps here, try adding new one :)
-      </EmptySegment>
+      </EmptyParagraph>
     );
   }
 
@@ -50,10 +50,8 @@ export function ApplicationsList(props: ApplicationsListProps) {
   ));
   
   return (
-    <Segment color="blue">
-      <List animated selection divided relaxed verticalAlign="middle">
-        {items}
-      </List>
-    </Segment>
+    <List animated selection divided relaxed verticalAlign="middle">
+      {items}
+    </List>
   );
 }

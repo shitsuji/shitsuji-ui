@@ -7,29 +7,34 @@ import { Project } from '../models';
 import { editProjectRequest } from '../actions';
 import { Segment, Header, Grid, Button, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { PROJECTS_PATH } from '../index';
+import { PROJECTS_PATH } from '../constants';
 import { RootState } from '../../models';
 import { WithLoader } from '../../shared';
 import { getRidAsId } from '../../helpers';
+import { Application } from '../../applications';
 
 function mapStateToProps({ projectDetails }: RootState) {
-  const { project, pending } = projectDetails;
+  const { project, pending, applications } = projectDetails;
 
-  return { project, pending };
+  return { project, pending, applications };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    editProject(project: Project) {
-      return dispatch(editProjectRequest(project));
+    editProject(project: Project, selectedApplications: string[]) {
+      return dispatch(editProjectRequest({
+        project,
+        selectedApplications
+      }));
     }
   };
 }
 
 export interface EditProjectProps {
   project: Project;
+  applications: Application[];
   pending: boolean;
-  editProject: (project: Project) => void;
+  editProject: (project: Project, selectedApplications: string[]) => void;
 }
 
 const enhance = compose(
@@ -40,7 +45,7 @@ const enhance = compose(
 export const EditProject = enhance(
   class extends React.PureComponent<EditProjectProps> {
     render() {
-      const { project } = this.props;
+      const { project, applications } = this.props;
 
       return (
         <Grid columns="1">
@@ -57,7 +62,7 @@ export const EditProject = enhance(
                 Edit project {project.name}
               </Header>
 
-              <ProjectForm project={project} onSubmit={this.props.editProject} />
+              <ProjectForm project={project} applications={applications} onSubmit={this.props.editProject} />
             </Segment>
           </Grid.Column>
         </Grid>

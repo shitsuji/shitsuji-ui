@@ -11,5 +11,6 @@ export const PROJECTS_INITIAL_STATE: ProjectsState = {
 
 export const PROJECT_DETAILS_INITIAL_STATE: ProjectDetailsState = {
   pending: true,
-  project: null
+  project: null,
+  applications: null
 };

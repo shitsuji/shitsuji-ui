@@ -1,25 +1,57 @@
 // @flow
 import React from 'react';
 import { ProjectForm } from '../components';
-import { Dispatch } from 'redux';
+import { Dispatch, compose } from 'redux';
 import { connect } from 'react-redux';
 import { ProjectCreateData } from '../models';
 import { createProjectRequest } from '../actions';
-import { Segment, Header, Grid, Button, Icon } from 'semantic-ui-react';
+import { Segment, Header, Grid, Button, Icon, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { PROJECTS_PATH } from '../index';
+import { loadApplicationsRequest } from '../../applications';
+import { RootState } from '../../models';
+
+function mapStateToProps(state: RootState) {
+  const pending = state.applications.pending;
+  
+  return { pending };
+}
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    createProject(project: ProjectCreateData) {
-      return dispatch(createProjectRequest(project));
+    loadApplications() {
+      return dispatch(loadApplicationsRequest({}));
+    },
+    createProject(project: ProjectCreateData, selectedApplications: string[]) {
+      return dispatch(createProjectRequest({
+        project,
+        selectedApplications
+      }));
     }
   };
 }
 
-export const CreateProject = connect(null, mapDispatchToProps)(
-  class extends React.PureComponent<{ createProject: () => {} }> {
+export interface CreateProjectProps {
+  pending: boolean;
+  createProject: (project: ProjectCreateData) => {};
+  loadApplications: () => {};
+}
+
+const enhance = compose(
+  connect(mapStateToProps, mapDispatchToProps)
+);
+
+export const CreateProject = enhance(
+  class extends React.PureComponent<CreateProjectProps> {
+    componentDidMount() {
+      this.props.loadApplications();
+    }
+    
     render() {
+      if (this.props.pending) {
+        return <Loader active />;
+      }
+
       return (
         <Grid columns="1">
           <Grid.Column>

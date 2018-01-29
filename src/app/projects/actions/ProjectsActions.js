@@ -32,7 +32,10 @@ export interface LoadProjectsFailureAction extends Action {
 export const loadProjectsFailure = actionCreator(LOAD_PROJECTS_FAILURE);
 
 export interface CreateProjectRequestAction extends Action {
-  payload: ProjectCreateData;
+  payload: {
+    project: ProjectCreateData;
+    selectedApplications: string[];
+  };
 }
 
 export const createProjectRequest = actionCreator(CREATE_PROJECT_REQUEST);

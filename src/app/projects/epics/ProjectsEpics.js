@@ -22,6 +22,7 @@ import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { PROJECTS_PATH } from '../constants';
 import queryString from 'query-string';
 import { Dependencies } from '../../models';
+import { getRidAsId } from '../../helpers';
 
 export function loadProjectsEpic(action$: Observable<Action>, store: Store, { history, axios }: Dependencies) {
   return action$.pipe(
@@ -56,10 +57,11 @@ export function createProjectEpic(action$: Observable<Action>, store: Store, { a
   return action$.pipe(
     ofType(CREATE_PROJECT_REQUEST),
     map((action: CreateProjectRequestAction) => action.payload),
-    exhaustMap(async (payload) => {
+    exhaustMap(async ({ project, selectedApplications }) => {
       try {
-        const res = await axios.post('/projects', payload);
-
+        const res = await axios.post('/projects', project);
+        await axios.put(`/projects/${getRidAsId((res.data))}/applications`, selectedApplications);
+        
         return createProjectSuccess(res.data);
       } catch (e) {
         return createProjectFailure(e);

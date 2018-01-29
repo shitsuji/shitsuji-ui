@@ -17,10 +17,14 @@ export function loadProjectDetailsEpic(action$: Observable<Action>, store: Store
     map((action: LoadProjectDeatilsRequestAction) => action.payload),
     exhaustMap(async ({ projectId }) => {
       try {
-        const res = await axios.get(`/projects/${projectId}`);
+        const [project, applications] = await Promise.all([
+          axios.get(`/projects/${projectId}`),
+          axios.get(`/projects/${projectId}/applications`)
+        ]);
 
         return loadProjectDeatilsSuccess({
-          project: res.data
+          project: project.data,
+          applications: applications.data
         });
       } catch (e) {
         return loadProjectDeatilsFailure(e);

@@ -6,14 +6,16 @@ import { TextTruncate } from '../../shared';
 import { getRidAsId } from '../../helpers';
 import { Link } from 'react-router-dom';
 import { PROJECTS_PATH } from '../constants';
+import { Application, ApplicationsList } from '../../applications';
 
 export interface ProjectContentProps {
   project: Project;
+  applications: Application[];
   onDeleteProject: (projectId: string) => void;
 }
 
 export function ProjectContent(props: ProjectContentProps) {
-  const { project } = props;
+  const { project, applications } = props;
   const projectId = getRidAsId(project);
 
   return (
@@ -49,11 +51,8 @@ export function ProjectContent(props: ProjectContentProps) {
         </Grid.Row>
         <Divider style={{margin: '0 1rem'}} />
         <Grid.Row>
-          <Grid.Column width="4">
-            Application list
-          </Grid.Column>
-          <Grid.Column width="12">
-            Content
+          <Grid.Column width="16">
+            <ApplicationsList applications={applications} />
           </Grid.Column>
         </Grid.Row>
       </Grid>

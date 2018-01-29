@@ -53,7 +53,9 @@ export const projectDetailsReducer = reducer(PROJECT_DETAILS_INITIAL_STATE, {
     pending: true
   }),
   [EDIT_PROJECT_SUCCESS]: (state: ProjectDetailsState, { payload }: EditProjectSuccessAction) => {
-    const projectId = getRidAsId(payload);
+    const { project, applications } = payload;
+
+    const projectId = getRidAsId(project);
     if (!state.project || getRidAsId(state.project) !== projectId) {
       return {
         ...state,
@@ -63,7 +65,8 @@ export const projectDetailsReducer = reducer(PROJECT_DETAILS_INITIAL_STATE, {
 
     return {
       ...state,
-      project: payload,
+      project,
+      applications,
       pending: false
     };
   },

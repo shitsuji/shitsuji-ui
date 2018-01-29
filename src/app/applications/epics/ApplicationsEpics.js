@@ -23,10 +23,11 @@ import { APPLICATIONS_PATH } from '../constants';
 import { History } from 'history';
 import queryString from 'query-string';
 import { Dependencies } from '../../models';
+import { LOAD_PROJECT_DETAILS_REQUEST } from '../../projects';
 
 export function loadApplicationsEpic(action$: Observable<Action>, store: Store, { history, axios }: Dependencies) {
   return action$.pipe(
-    ofType(LOAD_APPLICATIONS_REQUEST),
+    ofType(LOAD_APPLICATIONS_REQUEST, LOAD_PROJECT_DETAILS_REQUEST),
     map((action: LoadApplicationsRequestAction) => action.payload),
     exhaustMap(async ({ search }) => {
       const current = queryString.parse(history.location.search);

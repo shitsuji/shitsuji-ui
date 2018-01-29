@@ -19,11 +19,17 @@ export function editProjectEpic(action$: Observable<Action>, store: Store, { axi
   return action$.pipe(
     ofType(EDIT_PROJECT_REQUEST),
     map((action: EditProjectRequestAction) => action.payload),
-    exhaustMap(async (payload) => {
+    exhaustMap(async ({ project, selectedApplications }) => {
       try {
-        const res = await axios.patch(`/projects/${getRidAsId((payload))}`, payload);
+        const [res, applications] = await Promise.all([
+          axios.patch(`/projects/${getRidAsId((project))}`, project),
+          axios.put(`/projects/${getRidAsId((project))}/applications`, selectedApplications),
+        ]);
         
-        return editProjectSuccess(res.data);
+        return editProjectSuccess({
+          project: res.data,
+          applications: applications.data
+        });
       } catch (e) {
         return editProjectFailure(e);
       }
@@ -35,7 +41,7 @@ export function navigateToProjectsOnEditEpic(action$: Observable<Action>, store:
   return action$.pipe(
     ofType(EDIT_PROJECT_SUCCESS),
     map((action: EditProjectSuccessAction) => action.payload),
-    tap((project) => {
+    tap(({ project }) => {
       history.push(`${PROJECTS_PATH}/${getRidAsId(project)}`);
     }),
     ignoreElements()

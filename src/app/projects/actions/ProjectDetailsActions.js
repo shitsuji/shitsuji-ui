@@ -2,6 +2,7 @@
 import { Action } from 'redux';
 import { actionCreator } from '../../helpers';
 import { Project } from '../models';
+import { Application } from '../../applications';
 
 export const LOAD_PROJECT_DETAILS_REQUEST = 'LOAD_PROJECT_DETAILS_REQUEST';
 export const LOAD_PROJECT_DETAILS_SUCCESS = 'LOAD_PROJECT_DETAILS_SUCCESS';
@@ -16,6 +17,7 @@ export const loadProjectDeatilsRequest = actionCreator(LOAD_PROJECT_DETAILS_REQU
 export interface LoadProjectDeatilsSuccessAction extends Action {
   payload: {
     project: Project;
+    applications: Application[];
   };
 }
 

@@ -6,7 +6,7 @@ import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { ApplicationsState } from '../models';
 import { loadApplicationsRequest } from '../actions';
-import { Grid, Button, Input, Icon } from 'semantic-ui-react';
+import { Grid, Button, Input, Icon, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { CREATE_APPLICATION_PATH } from '../constants';
 import { RouterState } from 'react-router-redux';
@@ -93,7 +93,9 @@ export const ApplicationList = connect(mapStateToProps, mapDispatchToProps)(
           </Grid.Row>
           <Grid.Row>
             <Grid.Column width="16">
-              <ApplicationsListWithLoader applications={applications} pending={pending} />
+              <Segment color="blue">
+                <ApplicationsListWithLoader applications={applications} pending={pending} />
+              </Segment>
             </Grid.Column>
           </Grid.Row>
         </Grid>
