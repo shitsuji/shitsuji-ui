@@ -6,14 +6,16 @@ import { TextTruncate } from '../../shared';
 import { getRidAsId } from '../../helpers';
 import { Link } from 'react-router-dom';
 import { REPOSITORIES_PATH } from '../constants';
+import { Application, ApplicationsList } from '../../applications';
 
 export interface RepositoryContentProps {
   repository: Repository;
+  applications: Application[];
   onDeleteRepository: (repositoryId: string) => void;
 }
 
 export function RepositoryContent(props: RepositoryContentProps) {
-  const { repository } = props;
+  const { repository, applications } = props;
   const repositoryId = getRidAsId(repository);
 
   return (
@@ -49,11 +51,8 @@ export function RepositoryContent(props: RepositoryContentProps) {
         </Grid.Row>
         <Divider style={{margin: '0 1rem'}} />
         <Grid.Row>
-          <Grid.Column width="4">
-            Application list
-          </Grid.Column>
-          <Grid.Column width="12">
-            Content
+          <Grid.Column width="16">
+            <ApplicationsList applications={applications} />
           </Grid.Column>
         </Grid.Row>
       </Grid>

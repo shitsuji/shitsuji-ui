@@ -17,10 +17,14 @@ export function loadRepositoryDetailsEpic(action$: Observable<Action>, store: St
     map((action: LoadRepositoryDeatilsRequestAction) => action.payload),
     exhaustMap(async ({ repositoryId }) => {
       try {
-        const res = await axios.get(`/repositories/${repositoryId}`);
+        const [repository, applications] = await Promise.all([
+          axios.get(`/repositories/${repositoryId}`),
+          axios.get(`/repositories/${repositoryId}/applications`)
+        ]);
 
         return loadRepositoryDeatilsSuccess({
-          repository: res.data
+          repository: repository.data,
+          applications: applications.data
         });
       } catch (e) {
         return loadRepositoryDeatilsFailure(e);

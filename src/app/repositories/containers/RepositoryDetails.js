@@ -48,11 +48,12 @@ export const RepositoryDetails = connect(mapStateToProps, mapDispatchToProps)(cl
   }
 
   render() {
-    const { repository, pending } = this.props.repositoryDetails;
+    const { repository, pending, applications } = this.props.repositoryDetails;
     const { path } = this.props.match;
 
     const contentProps = {
       repository,
+      applications,
       pending,
       onDeleteRepository: this.props.deleteRepository
     };

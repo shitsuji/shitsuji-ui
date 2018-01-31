@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react';
-import { Form, InputOnChangeData, Button } from 'semantic-ui-react';
+import { Form, InputOnChangeData, Button, Popup } from 'semantic-ui-react';
 import { RepositoryCreateData, Repository } from '../models';
 
 export interface RepositoryFormProps {
@@ -16,16 +16,18 @@ export class RepositoryForm extends Component<RepositoryFormProps, RepositoryFor
   constructor(props: RepositoryFormProps) {
     super(props);
 
-    let name = '', url = '';
+    let name = '', url = '', branch = '';
     if (this.props.repository) {
       name = this.props.repository.name;
       url = this.props.repository.url;
+      branch = this.props.repository.branch;
     }
 
     this.state = {
       repository: {
         name,
-        url
+        url,
+        branch
       }
     };
   }
@@ -48,7 +50,7 @@ export class RepositoryForm extends Component<RepositoryFormProps, RepositoryFor
   }
 
   render() {
-    const { name, url } = this.state.repository;
+    const { name, url, branch } = this.state.repository;
 
     return (
       <Form onSubmit={(...args) => this.onSubmit(...args)}>
@@ -66,6 +68,22 @@ export class RepositoryForm extends Component<RepositoryFormProps, RepositoryFor
           label="Url"
           name="url"
           onChange={(...args) => this.onChange(...args)}
+        />
+
+        <Popup
+          content="Main branch from which new versions should be downloaded, by default it's 'master'"
+          position="right center"
+          size="tiny"
+          inverted
+          trigger={
+            <Form.Input
+              defaultValue={branch}
+              type="text"
+              label="Branch"
+              name="branch"
+              onChange={(...args) => this.onChange(...args)}
+            />
+          }
         />
 
         <Button type="submit" fluid primary>

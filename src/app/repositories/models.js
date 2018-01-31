@@ -1,9 +1,11 @@
 // @flow
 import { Record } from '../models';
+import { Application } from '../applications';
 
 export interface RepositoryCreateData {
   name: string;
   url: string;
+  branch: string;
 }
 
 export interface Repository extends RepositoryCreateData, Record {
@@ -17,5 +19,6 @@ export interface RepositoriesState {
 
 export interface RepositoryDetailsState {
   repository: ?Repository;
+  applications: ?Application[];
   pending: boolean;
 }
