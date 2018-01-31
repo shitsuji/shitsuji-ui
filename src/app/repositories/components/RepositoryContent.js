@@ -7,6 +7,17 @@ import { getRidAsId } from '../../helpers';
 import { Link } from 'react-router-dom';
 import { REPOSITORIES_PATH } from '../constants';
 import { Application, ApplicationsList } from '../../applications';
+import styled from 'styled-components';
+
+const PublicKeyWrapper = styled.div`
+  background-color: #efefef;
+  padding: 1rem;
+  word-break: break-word;
+`;
+
+const KeyGrid = styled(Grid)`
+  padding: 1rem 0 !important;
+`;
 
 export interface RepositoryContentProps {
   repository: Repository;
@@ -52,6 +63,46 @@ export function RepositoryContent(props: RepositoryContentProps) {
         <Divider style={{margin: '0 1rem'}} />
         <Grid.Row>
           <Grid.Column width="16">
+            <Header as="h3">
+              Repository URI
+              <Header.Subheader>
+                {repository.url}
+              </Header.Subheader>
+            </Header>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          {
+            repository.publicKey &&
+            <Grid.Column width="16">
+              <Header as="h3">
+                Public key
+              </Header>
+              <PublicKeyWrapper>
+                {repository.publicKey}
+              </PublicKeyWrapper>
+              <KeyGrid>
+                <Grid.Row>
+                  <Grid.Column width="8">
+                    <Button size="tiny" icon labelPosition="left">
+                      <Icon name="pencil" />
+                      Copy key
+                    </Button>
+                  </Grid.Column>
+                  <Grid.Column width="8" textAlign="right">
+                    <Button negative size="tiny" icon labelPosition="left">
+                      <Icon name="pencil" />
+                      Regenerate
+                    </Button>
+                  </Grid.Column>
+                </Grid.Row>
+              </KeyGrid>
+            </Grid.Column>
+          }
+          <Grid.Column width="16">
+            <Header as="h3">
+              Applications in this repository
+            </Header>
             <ApplicationsList applications={applications} />
           </Grid.Column>
         </Grid.Row>
