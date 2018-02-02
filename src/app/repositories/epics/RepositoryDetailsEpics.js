@@ -7,7 +7,11 @@ import {
   LOAD_REPOSITORY_DETAILS_REQUEST,
   LoadRepositoryDeatilsRequestAction,
   loadRepositoryDeatilsSuccess,
-  loadRepositoryDeatilsFailure
+  loadRepositoryDeatilsFailure,
+  INITIALIZE_REPOSITORY_REQUEST,
+  InitializeRepositoryRequestAction,
+  initializeRepositorySuccess,
+  initializeRepositoryFailure
 } from '../actions';
 import { Dependencies } from '../../models';
 
@@ -28,6 +32,22 @@ export function loadRepositoryDetailsEpic(action$: Observable<Action>, store: St
         });
       } catch (e) {
         return loadRepositoryDeatilsFailure(e);
+      }
+    })
+  );
+}
+
+export function initializeRepositoryEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
+  return action$.pipe(
+    ofType(INITIALIZE_REPOSITORY_REQUEST),
+    map((action: InitializeRepositoryRequestAction) => action.payload),
+    exhaustMap(async ({ repositoryId }) => {
+      try {
+        const res = await axios.post(`/repositories/${repositoryId}/initialize`, {});
+
+        return initializeRepositorySuccess(res.data);
+      } catch (e) {
+        return initializeRepositoryFailure(e);
       }
     })
   );

@@ -5,7 +5,7 @@ import {
   deleteRepositoryEpic,
   navigateToRepositoriesOnSuccessEpic
 } from './RepositoriesEpics';
-import { loadRepositoryDetailsEpic } from './RepositoryDetailsEpics';
+import { loadRepositoryDetailsEpic, initializeRepositoryEpic } from './RepositoryDetailsEpics';
 import { editRepositoryEpic, navigateToRepositoriesOnEditEpic } from './EditRepositoryEpics';
 
 export const repositoriesEpics = combineEpics(
@@ -15,5 +15,6 @@ export const repositoriesEpics = combineEpics(
   navigateToRepositoriesOnSuccessEpic,
   loadRepositoryDetailsEpic,
   editRepositoryEpic,
-  navigateToRepositoriesOnEditEpic
+  navigateToRepositoriesOnEditEpic,
+  initializeRepositoryEpic
 );

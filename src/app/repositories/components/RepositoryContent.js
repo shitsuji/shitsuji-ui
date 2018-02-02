@@ -23,6 +23,7 @@ export interface RepositoryContentProps {
   repository: Repository;
   applications: Application[];
   onDeleteRepository: (repositoryId: string) => void;
+  onInitializeRepository: (repositoryId: string) => void;
 }
 
 export function RepositoryContent(props: RepositoryContentProps) {
@@ -33,14 +34,27 @@ export function RepositoryContent(props: RepositoryContentProps) {
     <Segment color="blue">
       <Grid>
         <Grid.Row>
-          <Grid.Column width="11">
+          <Grid.Column width="8">
             <Header as="h2">
               <TextTruncate>
                 {repository.name}
               </TextTruncate>
             </Header>
           </Grid.Column>
-          <Grid.Column textAlign="right" width="5">
+          <Grid.Column textAlign="right" width="8">
+            <Popup
+              content="This triggers shitsuji to download your repository from git and parse all the `shitsuji.json` config file history"
+              position="right center"
+              size="tiny"
+              inverted
+              trigger={
+                <Button primary size="tiny" icon labelPosition="left"
+                  onClick={() => props.onInitializeRepository(repositoryId)}>
+                  <Icon name="arrow circle down" />
+                  Initialize repository
+                </Button>
+              }
+            />
             <Button as={Link} to={`${REPOSITORIES_PATH}/${repositoryId}/edit`} size="tiny" icon labelPosition="left">
               <Icon name="pencil" />
               Edit repository

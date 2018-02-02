@@ -5,7 +5,7 @@ import { RootState } from '../../models';
 import { RepositoryDetailsState } from '../models';
 import { match } from 'react-router';
 import { Dispatch } from 'redux';
-import { loadRepositoryDeatilsRequest, deleteRepositoryRequest } from '../actions';
+import { loadRepositoryDeatilsRequest, deleteRepositoryRequest, initializeRepositoryRequest } from '../actions';
 import { Grid, Button, Icon } from 'semantic-ui-react';
 import { REPOSITORIES_PATH } from '../constants';
 import { Link, Switch, Route } from 'react-router-dom';
@@ -25,6 +25,9 @@ function mapDispatchToProps(dispatch: Dispatch) {
     },
     deleteRepository: (repositoryId: string) => {
       dispatch(deleteRepositoryRequest({ repositoryId }));
+    },
+    initializeRepository: (repositoryId: string) => {
+      dispatch(initializeRepositoryRequest({ repositoryId }));
     }
   };
 }
@@ -34,6 +37,7 @@ export interface RepositoryDetailsProps {
   match: match<{ repositoryId: string }>;
   loadRepositoryDetails: (repositoryId: string) => void;
   deleteRepository: (repositoryId: string) => void;
+  initializeRepository: (repositoryId: string) => void;
 }
 
 export const RepositoryDetails = connect(mapStateToProps, mapDispatchToProps)(class extends React.PureComponent<RepositoryDetailsProps> {
@@ -55,6 +59,7 @@ export const RepositoryDetails = connect(mapStateToProps, mapDispatchToProps)(cl
       repository,
       applications,
       pending,
+      onInitializeRepository: this.props.initializeRepository,
       onDeleteRepository: this.props.deleteRepository
     };
 

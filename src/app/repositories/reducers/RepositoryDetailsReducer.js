@@ -12,7 +12,11 @@ import {
   EDIT_REPOSITORY_REQUEST,
   EDIT_REPOSITORY_SUCCESS,
   EditRepositorySuccessAction,
-  EDIT_REPOSITORY_FAILURE
+  EDIT_REPOSITORY_FAILURE,
+  INITIALIZE_REPOSITORY_REQUEST,
+  InitializeRepositoryRequestAction,
+  INITIALIZE_REPOSITORY_SUCCESS,
+  INITIALIZE_REPOSITORY_FAILURE
 } from '../actions';
 import { RepositoryDetailsState } from '../models';
 
@@ -68,6 +72,19 @@ export const repositoryDetailsReducer = reducer(REPOSITORY_DETAILS_INITIAL_STATE
     };
   },
   [EDIT_REPOSITORY_FAILURE]: (state) => ({
+    ...state,
+    pending: false
+  }),
+  [INITIALIZE_REPOSITORY_REQUEST]: (state: RepositoryDetailsState, { payload }: InitializeRepositoryRequestAction) => ({
+    ...state,
+    pending: true
+  }),
+  [INITIALIZE_REPOSITORY_SUCCESS]: (state: RepositoryDetailsState, { payload }: InitializeRepositoryRequestAction) => ({
+    ...state,
+    ...payload,
+    pending: false
+  }),
+  [INITIALIZE_REPOSITORY_FAILURE]: (state: RepositoryDetailsState, { payload }: InitializeRepositoryRequestAction) => ({
     ...state,
     pending: false
   })
