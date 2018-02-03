@@ -5,11 +5,16 @@ import { RootState } from '../../models';
 import { RepositoryDetailsState } from '../models';
 import { match } from 'react-router';
 import { Dispatch } from 'redux';
-import { loadRepositoryDeatilsRequest, deleteRepositoryRequest, initializeRepositoryRequest } from '../actions';
+import {
+  loadRepositoryDeatilsRequest,
+  deleteRepositoryRequest,
+  initializeRepositoryRequest,
+  regenerateRepositoryRequest
+} from '../actions';
 import { Grid, Button, Icon } from 'semantic-ui-react';
 import { REPOSITORIES_PATH } from '../constants';
 import { Link, Switch, Route } from 'react-router-dom';
-import { RepositoryContentWithLoader } from '../components';
+import { RepositoryContentEnhanced } from '../components';
 import { getRidAsId } from '../../helpers';
 import { NotFoundWrapper } from '../../shared';
 import { EditRepository } from './EditRepository';
@@ -28,6 +33,9 @@ function mapDispatchToProps(dispatch: Dispatch) {
     },
     initializeRepository: (repositoryId: string) => {
       dispatch(initializeRepositoryRequest({ repositoryId }));
+    },
+    regenerateRepository: (repositoryId: string) => {
+      dispatch(regenerateRepositoryRequest({ repositoryId }));
     }
   };
 }
@@ -38,6 +46,7 @@ export interface RepositoryDetailsProps {
   loadRepositoryDetails: (repositoryId: string) => void;
   deleteRepository: (repositoryId: string) => void;
   initializeRepository: (repositoryId: string) => void;
+  regenerateRepository: (repositoryId: string) => void;
 }
 
 export const RepositoryDetails = connect(mapStateToProps, mapDispatchToProps)(class extends React.PureComponent<RepositoryDetailsProps> {
@@ -60,7 +69,8 @@ export const RepositoryDetails = connect(mapStateToProps, mapDispatchToProps)(cl
       applications,
       pending,
       onInitializeRepository: this.props.initializeRepository,
-      onDeleteRepository: this.props.deleteRepository
+      onDeleteRepository: this.props.deleteRepository,
+      onRegenerateRepository: this.props.regenerateRepository
     };
 
     return (
@@ -79,7 +89,7 @@ export const RepositoryDetails = connect(mapStateToProps, mapDispatchToProps)(cl
               {
                 !pending && !repository ?
                   <NotFoundWrapper>Repository not found :(</NotFoundWrapper> :
-                  <RepositoryContentWithLoader {...contentProps}/>
+                  <RepositoryContentEnhanced {...contentProps}/>
               }
             </Grid.Column>
           </Grid>

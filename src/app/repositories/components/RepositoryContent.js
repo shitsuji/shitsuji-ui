@@ -22,8 +22,10 @@ const KeyGrid = styled(Grid)`
 export interface RepositoryContentProps {
   repository: Repository;
   applications: Application[];
+  onCopy: (text: string) => void;
   onDeleteRepository: (repositoryId: string) => void;
   onInitializeRepository: (repositoryId: string) => void;
+  onRegenerateRepository: (repositoryId: string) => void;
 }
 
 export function RepositoryContent(props: RepositoryContentProps) {
@@ -98,16 +100,33 @@ export function RepositoryContent(props: RepositoryContentProps) {
               <KeyGrid>
                 <Grid.Row>
                   <Grid.Column width="8">
-                    <Button size="tiny" icon labelPosition="left">
-                      <Icon name="pencil" />
+                    <Button
+                      size="tiny"
+                      icon
+                      labelPosition="left"
+                      onClick={() => props.onCopy(repository.publicKey)}>
+                      <Icon name="copy" />
                       Copy key
                     </Button>
                   </Grid.Column>
                   <Grid.Column width="8" textAlign="right">
-                    <Button negative size="tiny" icon labelPosition="left">
-                      <Icon name="pencil" />
-                      Regenerate
-                    </Button>
+                    <Popup
+                      content="Regenerate keypair in case of private key compromise, this requires you to update SSH key in your git repository also"
+                      position="right center"
+                      size="tiny"
+                      inverted
+                      trigger={
+                        <Button
+                          negative
+                          size="tiny"
+                          icon
+                          labelPosition="left"
+                          onClick={() => props.onRegenerateRepository(repositoryId)}>
+                          <Icon name="refresh" />
+                          Regenerate key
+                        </Button>
+                      }
+                    /> 
                   </Grid.Column>
                 </Grid.Row>
               </KeyGrid>

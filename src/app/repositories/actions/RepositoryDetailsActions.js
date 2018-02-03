@@ -10,7 +10,9 @@ export const LOAD_REPOSITORY_DETAILS_FAILURE = 'LOAD_REPOSITORY_DETAILS_FAILURE'
 export const INITIALIZE_REPOSITORY_REQUEST = 'INITIALIZE_REPOSITORY_REQUEST';
 export const INITIALIZE_REPOSITORY_SUCCESS = 'INITIALIZE_REPOSITORY_SUCCESS';
 export const INITIALIZE_REPOSITORY_FAILURE = 'INITIALIZE_REPOSITORY_FAILURE';
-
+export const REGENERATE_REPOSITORY_REQUEST = 'REGENERATE_REPOSITORY_REQUEST';
+export const REGENERATE_REPOSITORY_SUCCESS = 'REGENERATE_REPOSITORY_SUCCESS';
+export const REGENERATE_REPOSITORY_FAILURE = 'REGENERATE_REPOSITORY_FAILURE';
 
 export interface LoadRepositoryDeatilsRequestAction extends Action {
   payload: { repositoryId: string };
@@ -53,3 +55,21 @@ export interface InitializeRepositoryFailureAction extends Action {
 }
 
 export const initializeRepositoryFailure = actionCreator(INITIALIZE_REPOSITORY_FAILURE);
+
+export interface RegenerateRepositoryRequestAction extends Action {
+  payload: { repositoryId: string };
+}
+
+export const regenerateRepositoryRequest = actionCreator(REGENERATE_REPOSITORY_REQUEST);
+
+export interface RegenerateRepositorySuccessAction extends Action {
+  payload: Repository;
+}
+
+export const regenerateRepositorySuccess = actionCreator(REGENERATE_REPOSITORY_SUCCESS);
+
+export interface RegenerateRepositoryFailureAction extends Action {
+  payload: null;
+}
+
+export const regenerateRepositoryFailure = actionCreator(REGENERATE_REPOSITORY_FAILURE);

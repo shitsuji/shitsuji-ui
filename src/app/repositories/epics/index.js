@@ -5,8 +5,15 @@ import {
   deleteRepositoryEpic,
   navigateToRepositoriesOnSuccessEpic
 } from './RepositoriesEpics';
-import { loadRepositoryDetailsEpic, initializeRepositoryEpic } from './RepositoryDetailsEpics';
-import { editRepositoryEpic, navigateToRepositoriesOnEditEpic } from './EditRepositoryEpics';
+import {
+  loadRepositoryDetailsEpic,
+  initializeRepositoryEpic,
+  regenerateRepositoryEpic
+} from './RepositoryDetailsEpics';
+import {
+  editRepositoryEpic,
+  navigateToRepositoriesOnEditEpic
+} from './EditRepositoryEpics';
 
 export const repositoriesEpics = combineEpics(
   loadRepositoriesEpic,
@@ -16,5 +23,6 @@ export const repositoriesEpics = combineEpics(
   loadRepositoryDetailsEpic,
   editRepositoryEpic,
   navigateToRepositoriesOnEditEpic,
-  initializeRepositoryEpic
+  initializeRepositoryEpic,
+  regenerateRepositoryEpic
 );

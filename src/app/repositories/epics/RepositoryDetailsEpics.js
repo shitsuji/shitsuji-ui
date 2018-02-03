@@ -11,7 +11,11 @@ import {
   INITIALIZE_REPOSITORY_REQUEST,
   InitializeRepositoryRequestAction,
   initializeRepositorySuccess,
-  initializeRepositoryFailure
+  initializeRepositoryFailure,
+  REGENERATE_REPOSITORY_REQUEST,
+  RegenerateRepositoryRequestAction,
+  regenerateRepositorySuccess,
+  regenerateRepositoryFailure
 } from '../actions';
 import { Dependencies } from '../../models';
 
@@ -48,6 +52,22 @@ export function initializeRepositoryEpic(action$: Observable<Action>, store: Sto
         return initializeRepositorySuccess(res.data);
       } catch (e) {
         return initializeRepositoryFailure(e);
+      }
+    })
+  );
+}
+
+export function regenerateRepositoryEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
+  return action$.pipe(
+    ofType(REGENERATE_REPOSITORY_REQUEST),
+    map((action: RegenerateRepositoryRequestAction) => action.payload),
+    exhaustMap(async ({ repositoryId }) => {
+      try {
+        const res = await axios.post(`/repositories/${repositoryId}/regenerate`, {});
+
+        return regenerateRepositorySuccess(res.data);
+      } catch (e) {
+        return regenerateRepositoryFailure(e);
       }
     })
   );
