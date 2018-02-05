@@ -5,10 +5,6 @@ import {
   LOAD_USER_DETAILS_REQUEST,
   LOAD_USER_DETAILS_SUCCESS,
   LOAD_USER_DETAILS_FAILURE,
-  DELETE_USER_REQUEST,
-  DELETE_USER_SUCCESS,
-  DeleteUserSuccessAction,
-  DELETE_USER_FAILURE,
   EDIT_USER_REQUEST,
   EDIT_USER_SUCCESS,
   EditUserSuccessAction,
@@ -27,24 +23,6 @@ export const userDetailsReducer = reducer(USER_DETAILS_INITIAL_STATE, {
     pending: false
   }),
   [LOAD_USER_DETAILS_FAILURE]: (state: UserDetailsState) => ({
-    ...state,
-    pending: false
-  }),
-  [DELETE_USER_REQUEST]: (state) => ({
-    ...state,
-    pending: true
-  }),
-  [DELETE_USER_SUCCESS]: (state: UserDetailsState, { payload }: DeleteUserSuccessAction) => {
-    if (!state.user || getRidAsId(state.user) !== payload.userId) {
-      return {
-        ...state,
-        pending: false
-      };
-    }
-  
-    return USER_DETAILS_INITIAL_STATE;
-  },
-  [DELETE_USER_FAILURE]: (state) => ({
     ...state,
     pending: false
   }),

@@ -15,7 +15,6 @@ import { Grid, Button, Icon } from 'semantic-ui-react';
 import { REPOSITORIES_PATH } from '../constants';
 import { Link, Switch, Route } from 'react-router-dom';
 import { RepositoryContentEnhanced } from '../components';
-import { getRidAsId } from '../../helpers';
 import { NotFoundWrapper } from '../../shared';
 import { EditRepository } from './EditRepository';
 
@@ -52,10 +51,6 @@ export interface RepositoryDetailsProps {
 export const RepositoryDetails = connect(mapStateToProps, mapDispatchToProps)(class extends React.PureComponent<RepositoryDetailsProps> {
   componentDidMount() {
     const { repositoryId } = this.props.match.params;
-    const { repository } = this.props.repositoryDetails;
-    if (repository && getRidAsId(repository) === repositoryId) {
-      return;
-    }
 
     this.props.loadRepositoryDetails(repositoryId);
   }

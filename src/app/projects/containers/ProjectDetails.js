@@ -10,7 +10,6 @@ import { Grid, Button, Icon } from 'semantic-ui-react';
 import { PROJECTS_PATH } from '../constants';
 import { Link, Switch, Route } from 'react-router-dom';
 import { ProjectContentWithLoader } from '../components';
-import { getRidAsId } from '../../helpers';
 import { NotFoundWrapper } from '../../shared';
 import { EditProject } from './EditProject';
 
@@ -39,10 +38,6 @@ export interface ProjectDetailsProps {
 export const ProjectDetails = connect(mapStateToProps, mapDispatchToProps)(class extends React.PureComponent<ProjectDetailsProps> {
   componentDidMount() {
     const { projectId } = this.props.match.params;
-    const { project } = this.props.projectDetails;
-    if (project && getRidAsId(project) === projectId) {
-      return;
-    }
 
     this.props.loadProjectDetails(projectId);
   }
