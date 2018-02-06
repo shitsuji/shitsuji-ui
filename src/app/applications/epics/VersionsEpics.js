@@ -13,11 +13,14 @@ import {
   DeleteVersionRequestAction,
   deleteVersionSuccess,
   deleteVersionFailure,
-  DeleteVersionSuccessAction
+  DeleteVersionSuccessAction,
+  CREATE_VERSION_FAILURE,
+  DELETE_VERSION_FAILURE
 } from '../actions';
 import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { APPLICATIONS_PATH } from '../constants';
 import { Dependencies } from '../../models';
+import { showError } from '../../helpers';
 
 export function createVersionEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
@@ -61,6 +64,22 @@ export function navigateToVersionsOnSuccessEpic(action$: Observable<Action>, sto
     tap((applicationId) => {
       history.push(`${APPLICATIONS_PATH}/${applicationId}`);
     }),
+    ignoreElements()
+  );
+}
+
+export function createVersionToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(CREATE_VERSION_FAILURE),
+    tap(() => showError('Error while creating version')),
+    ignoreElements()
+  );
+}
+
+export function deleteVersionToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(DELETE_VERSION_FAILURE),
+    tap(() => showError('Error while deleting version')),
     ignoreElements()
   );
 }

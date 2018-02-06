@@ -2,7 +2,7 @@
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from 'redux';
 import { ofType } from 'redux-observable';
-import { exhaustMap, map } from 'rxjs/operators';
+import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import {
   LOAD_REPOSITORY_DETAILS_REQUEST,
   LoadRepositoryDeatilsRequestAction,
@@ -15,9 +15,12 @@ import {
   REGENERATE_REPOSITORY_REQUEST,
   RegenerateRepositoryRequestAction,
   regenerateRepositorySuccess,
-  regenerateRepositoryFailure
+  regenerateRepositoryFailure,
+  INITIALIZE_REPOSITORY_FAILURE,
+  REGENERATE_REPOSITORY_FAILURE
 } from '../actions';
 import { Dependencies } from '../../models';
+import { showError } from '../../helpers';
 
 export function loadRepositoryDetailsEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
@@ -70,5 +73,21 @@ export function regenerateRepositoryEpic(action$: Observable<Action>, store: Sto
         return regenerateRepositoryFailure(e);
       }
     })
+  );
+}
+
+export function initializeRepositoryToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(INITIALIZE_REPOSITORY_FAILURE),
+    tap(() => showError('Error while initializing repository')),
+    ignoreElements()
+  );
+}
+
+export function regenerateRepositoryToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(REGENERATE_REPOSITORY_FAILURE),
+    tap(() => showError('Error while regenerating repository keypair')),
+    ignoreElements()
   );
 }

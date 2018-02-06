@@ -8,11 +8,12 @@ import {
   EditUserRequestAction,
   EditUserSuccessAction,
   editUserSuccess,
-  editUserFailure
+  editUserFailure,
+  EDIT_USER_FAILURE
 } from '../actions';
 import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { USERS_PATH } from '../constants';
-import { getRidAsId } from '../../helpers';
+import { getRidAsId, showError } from '../../helpers';
 import { Dependencies } from '../../models';
 
 export function editUserEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
@@ -38,6 +39,14 @@ export function navigateToUsersOnEditEpic(action$: Observable<Action>, store: St
     tap((user) => {
       history.push(`${USERS_PATH}`);
     }),
+    ignoreElements()
+  );
+}
+
+export function editUserToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(EDIT_USER_FAILURE),
+    tap(() => showError('Error while updating user')),
     ignoreElements()
   );
 }

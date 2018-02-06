@@ -16,7 +16,9 @@ import {
   DELETE_APPLICATION_REQUEST,
   deleteApplicationFailure,
   deleteApplicationSuccess,
-  DeleteApplicationRequestAction
+  DeleteApplicationRequestAction,
+  CREATE_APPLICATION_FAILURE,
+  DELETE_APPLICATION_FAILURE
 } from '../actions';
 import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { APPLICATIONS_PATH } from '../constants';
@@ -24,6 +26,7 @@ import { History } from 'history';
 import queryString from 'query-string';
 import { Dependencies } from '../../models';
 import { LOAD_PROJECT_DETAILS_REQUEST } from '../../projects';
+import { showError } from '../../helpers';
 
 export function loadApplicationsEpic(action$: Observable<Action>, store: Store, { history, axios }: Dependencies) {
   return action$.pipe(
@@ -92,6 +95,22 @@ export function navigateToApplicationsOnSuccessEpic(action$: Observable<Action>,
     tap(() => {
       history.push(APPLICATIONS_PATH);
     }),
+    ignoreElements()
+  );
+}
+
+export function createApplicationToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(CREATE_APPLICATION_FAILURE),
+    tap(() => showError('Error while creating application')),
+    ignoreElements()
+  );
+}
+
+export function deleteApplicationToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(DELETE_APPLICATION_FAILURE),
+    tap(() => showError('Error while deleting application')),
     ignoreElements()
   );
 }

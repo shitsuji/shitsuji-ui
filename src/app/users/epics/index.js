@@ -1,7 +1,14 @@
 import { combineEpics } from 'redux-observable';
-import { loadUsersEpic, createUserEpic, deleteUserEpic, navigateToUsersOnSuccessEpic } from './UsersEpics';
+import {
+  loadUsersEpic,
+  createUserEpic,
+  deleteUserEpic,
+  navigateToUsersOnSuccessEpic,
+  createUserToastEpic,
+  deleteUserToastEpic
+} from './UsersEpics';
 import { loadUserDetailsEpic } from './UserDetailsEpics';
-import { editUserEpic, navigateToUsersOnEditEpic } from './EditUserEpics';
+import { editUserEpic, navigateToUsersOnEditEpic, editUserToastEpic } from './EditUserEpics';
 
 export const usersEpics = combineEpics(
   loadUsersEpic,
@@ -10,5 +17,8 @@ export const usersEpics = combineEpics(
   navigateToUsersOnSuccessEpic,
   loadUserDetailsEpic,
   editUserEpic,
-  navigateToUsersOnEditEpic
+  navigateToUsersOnEditEpic,
+  editUserToastEpic,
+  createUserToastEpic,
+  deleteUserToastEpic
 );

@@ -8,11 +8,12 @@ import {
   EditRepositoryRequestAction,
   EditRepositorySuccessAction,
   editRepositorySuccess,
-  editRepositoryFailure
+  editRepositoryFailure,
+  EDIT_REPOSITORY_FAILURE
 } from '../actions';
 import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { REPOSITORIES_PATH } from '../constants';
-import { getRidAsId } from '../../helpers';
+import { getRidAsId, showError } from '../../helpers';
 import { Dependencies } from '../../models';
 
 export function editRepositoryEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
@@ -38,6 +39,14 @@ export function navigateToRepositoriesOnEditEpic(action$: Observable<Action>, st
     tap((repository) => {
       history.push(`${REPOSITORIES_PATH}/${getRidAsId(repository)}`);
     }),
+    ignoreElements()
+  );
+}
+
+export function editRepositoryToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(EDIT_REPOSITORY_FAILURE),
+    tap(() => showError('Error while updating repository')),
     ignoreElements()
   );
 }

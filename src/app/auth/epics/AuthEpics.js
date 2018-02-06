@@ -18,6 +18,7 @@ import {
 import { exhaustMap, map, ignoreElements, tap } from 'rxjs/operators';
 import { TOKEN_KEY } from '../constants';
 import { Dependencies } from '../../models';
+import { showError } from '../../helpers';
 
 function setToken(token, axios) {
   localStorage.setItem(TOKEN_KEY, token);
@@ -69,6 +70,14 @@ export function removeTokenEpic(action$: Observable<Action>, store: Store, { axi
       localStorage.removeItem(TOKEN_KEY);
       delete axios.defaults.headers.common.Authorization;
     }),
+    ignoreElements()
+  );
+}
+
+export function authToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(LOGIN_FAILURE),
+    tap(() => showError('Invalid login or password')),
     ignoreElements()
   );
 }

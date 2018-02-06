@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "history": "^4.7.2",
+    "noty": "^3.2.0-beta",
     "query-string": "^5.0.1",
     "react": "^16.2.0",
     "react-day-picker": "^7.0.7",

@@ -7,6 +7,8 @@ import { App } from './app/App';
 import { store } from './app/store';
 import { history } from './app/middlewares';
 import './index.css';
+import 'noty/lib/noty.css';
+import 'noty/lib/themes/metroui.css';
 
 ReactDOM.render((
   <Provider store={store}>

@@ -8,11 +8,12 @@ import {
   EditVersionRequestAction,
   EditVersionSuccessAction,
   editVersionSuccess,
-  editVersionFailure
+  editVersionFailure,
+  EDIT_VERSION_FAILURE
 } from '../actions';
 import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { APPLICATIONS_PATH } from '../constants';
-import { getRidAsId } from '../../helpers';
+import { getRidAsId, showError } from '../../helpers';
 import { Dependencies } from '../../models';
 
 export function editVersionEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
@@ -38,6 +39,14 @@ export function navigateToVersionsOnEditEpic(action$: Observable<Action>, store:
     tap(({ applicationId }) => {
       history.push(`${APPLICATIONS_PATH}/${applicationId}`);
     }),
+    ignoreElements()
+  );
+}
+
+export function editVersionToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(EDIT_VERSION_FAILURE),
+    tap(() => showError('Error while updating version')),
     ignoreElements()
   );
 }

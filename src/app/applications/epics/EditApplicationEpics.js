@@ -8,11 +8,12 @@ import {
   EditApplicationRequestAction,
   EditApplicationSuccessAction,
   editApplicationSuccess,
-  editApplicationFailure
+  editApplicationFailure,
+  EDIT_APPLICATION_FAILURE
 } from '../actions';
 import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { APPLICATIONS_PATH } from '../constants';
-import { getRidAsId } from '../../helpers';
+import { getRidAsId, showError } from '../../helpers';
 import { Dependencies } from '../../models';
 
 export function editApplicationEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
@@ -38,6 +39,14 @@ export function navigateToApplicationsOnEditEpic(action$: Observable<Action>, st
     tap((application) => {
       history.push(`${APPLICATIONS_PATH}/${getRidAsId(application)}`);
     }),
+    ignoreElements()
+  );
+}
+
+export function editApplicationToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(EDIT_APPLICATION_FAILURE),
+    tap(() => showError('Error while updating application')),
     ignoreElements()
   );
 }

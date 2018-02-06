@@ -1,6 +1,8 @@
 // @flow
 import { defaultFormat } from 'react-day-picker/DayPickerInput';
 import { Record } from './models';
+import { DEFAULT_TOAST_TIMEOUT } from './constants';
+import Noty from 'noty';
 
 export function actionCreator<T>(type: string) {
   return function (payload: T) {
@@ -33,4 +35,14 @@ export function getRidAsId(record: Record): string {
 
   const rid = record['@rid'];
   return rid.substr(1, rid.length);
+}
+
+export function showError(text: string) {
+  new Noty({
+    theme: 'metroui',
+    type: 'error',
+    timeout: DEFAULT_TOAST_TIMEOUT,
+    layout: 'bottomRight',
+    text
+  }).show();
 }

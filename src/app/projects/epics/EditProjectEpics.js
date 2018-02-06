@@ -8,11 +8,12 @@ import {
   EditProjectRequestAction,
   EditProjectSuccessAction,
   editProjectSuccess,
-  editProjectFailure
+  editProjectFailure,
+  EDIT_PROJECT_FAILURE
 } from '../actions';
 import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { PROJECTS_PATH } from '../constants';
-import { getRidAsId } from '../../helpers';
+import { getRidAsId, showError } from '../../helpers';
 import { Dependencies } from '../../models';
 
 export function editProjectEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
@@ -44,6 +45,14 @@ export function navigateToProjectsOnEditEpic(action$: Observable<Action>, store:
     tap(({ project }) => {
       history.push(`${PROJECTS_PATH}/${getRidAsId(project)}`);
     }),
+    ignoreElements()
+  );
+}
+
+export function editProjectToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(EDIT_PROJECT_FAILURE),
+    tap(() => showError('Error while updating project')),
     ignoreElements()
   );
 }

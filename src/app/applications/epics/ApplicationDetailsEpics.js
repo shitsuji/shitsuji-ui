@@ -2,7 +2,7 @@
 import { Observable } from 'rxjs/Observable';
 import { Action, Store } from 'redux';
 import { ofType } from 'redux-observable';
-import { exhaustMap, map } from 'rxjs/operators';
+import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import {
   LOAD_APPLICATION_DETAILS_REQUEST,
   LoadApplicationDeatilsRequestAction,
@@ -11,10 +11,11 @@ import {
   SELECT_VERSION_REQUEST,
   SelectVersionRequestAction,
   selectVersionSuccess,
-  selectVersionFailure
+  selectVersionFailure,
+  SELECT_VERSION_FAILURE
 } from '../actions';
 import { Dependencies } from '../../models';
-import { getRidAsId } from '../../helpers';
+import { getRidAsId, showError } from '../../helpers';
 
 export function loadApplicationDetailsEpic(action$: Observable<Action>, store: Store, { history, axios }: Dependencies) {
   return action$.pipe(
@@ -59,5 +60,13 @@ export function selectVersionEpic(action$: Observable<Action>, store: Store, { a
         return selectVersionFailure(e);
       }
     })
+  );
+}
+
+export function selectVersionToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(SELECT_VERSION_FAILURE),
+    tap(() => showError('Error while downloading dependees and dependers')),
+    ignoreElements()
   );
 }

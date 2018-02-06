@@ -1,9 +1,34 @@
 import { combineEpics } from 'redux-observable';
-import { loadApplicationsEpic, createApplicationEpic, deleteApplicationEpic, navigateToApplicationsOnSuccessEpic } from './ApplicationsEpics';
-import { loadApplicationDetailsEpic, selectVersionEpic } from './ApplicationDetailsEpics';
-import { createVersionEpic, deleteVersionEpic, navigateToVersionsOnSuccessEpic } from './VersionsEpics';
-import { editApplicationEpic, navigateToApplicationsOnEditEpic } from './EditApplicationEpics';
-import { editVersionEpic, navigateToVersionsOnEditEpic } from './EditVersionEpics';
+import {
+  loadApplicationsEpic,
+  createApplicationEpic,
+  deleteApplicationEpic,
+  navigateToApplicationsOnSuccessEpic,
+  createApplicationToastEpic,
+  deleteApplicationToastEpic
+} from './ApplicationsEpics';
+import {
+  loadApplicationDetailsEpic,
+  selectVersionEpic,
+  selectVersionToastEpic
+} from './ApplicationDetailsEpics';
+import {
+  createVersionEpic,
+  deleteVersionEpic,
+  navigateToVersionsOnSuccessEpic,
+  createVersionToastEpic,
+  deleteVersionToastEpic
+} from './VersionsEpics';
+import {
+  editApplicationEpic,
+  navigateToApplicationsOnEditEpic,
+  editApplicationToastEpic
+} from './EditApplicationEpics';
+import {
+  editVersionEpic,
+  navigateToVersionsOnEditEpic,
+  editVersionToastEpic
+} from './EditVersionEpics';
 
 export const applicationsEpics = combineEpics(
   loadApplicationsEpic,
@@ -18,5 +43,12 @@ export const applicationsEpics = combineEpics(
   navigateToApplicationsOnEditEpic,
   editVersionEpic,
   navigateToVersionsOnEditEpic,
-  selectVersionEpic
+  selectVersionEpic,
+  selectVersionToastEpic,
+  createApplicationToastEpic,
+  deleteApplicationToastEpic,
+  editApplicationToastEpic,
+  editVersionToastEpic,
+  createVersionToastEpic,
+  deleteVersionToastEpic
 );

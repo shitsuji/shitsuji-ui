@@ -16,12 +16,15 @@ import {
   deleteRepositorySuccess,
   deleteRepositoryFailure,
   CREATE_REPOSITORY_SUCCESS,
-  DELETE_REPOSITORY_SUCCESS
+  DELETE_REPOSITORY_SUCCESS,
+  CREATE_REPOSITORY_FAILURE,
+  DELETE_REPOSITORY_FAILURE
 } from '../actions';
 import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { REPOSITORIES_PATH } from '../constants';
 import queryString from 'query-string';
 import { Dependencies } from '../../models';
+import { showError } from '../../helpers';
 
 export function loadRepositoriesEpic(action$: Observable<Action>, store: Store, { history, axios }: Dependencies) {
   return action$.pipe(
@@ -90,6 +93,22 @@ export function navigateToRepositoriesOnSuccessEpic(action$: Observable<Action>,
     tap(() => {
       history.push(REPOSITORIES_PATH);
     }),
+    ignoreElements()
+  );
+}
+
+export function createRepositoryToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(CREATE_REPOSITORY_FAILURE),
+    tap(() => showError('Error while creating repository')),
+    ignoreElements()
+  );
+}
+
+export function deleteRepositoryToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(DELETE_REPOSITORY_FAILURE),
+    tap(() => showError('Error while deleting repository')),
     ignoreElements()
   );
 }

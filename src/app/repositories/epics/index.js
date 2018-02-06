@@ -3,16 +3,21 @@ import {
   loadRepositoriesEpic,
   createRepositoryEpic,
   deleteRepositoryEpic,
-  navigateToRepositoriesOnSuccessEpic
+  navigateToRepositoriesOnSuccessEpic,
+  createRepositoryToastEpic,
+  deleteRepositoryToastEpic
 } from './RepositoriesEpics';
 import {
   loadRepositoryDetailsEpic,
   initializeRepositoryEpic,
-  regenerateRepositoryEpic
+  regenerateRepositoryEpic,
+  initializeRepositoryToastEpic,
+  regenerateRepositoryToastEpic
 } from './RepositoryDetailsEpics';
 import {
   editRepositoryEpic,
-  navigateToRepositoriesOnEditEpic
+  navigateToRepositoriesOnEditEpic,
+  editRepositoryToastEpic
 } from './EditRepositoryEpics';
 
 export const repositoriesEpics = combineEpics(
@@ -24,5 +29,10 @@ export const repositoriesEpics = combineEpics(
   editRepositoryEpic,
   navigateToRepositoriesOnEditEpic,
   initializeRepositoryEpic,
-  regenerateRepositoryEpic
+  regenerateRepositoryEpic,
+  editRepositoryToastEpic,
+  initializeRepositoryToastEpic,
+  regenerateRepositoryToastEpic,
+  createRepositoryToastEpic,
+  deleteRepositoryToastEpic
 );

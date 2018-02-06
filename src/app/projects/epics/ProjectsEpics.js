@@ -16,13 +16,15 @@ import {
   deleteProjectSuccess,
   deleteProjectFailure,
   CREATE_PROJECT_SUCCESS,
-  DELETE_PROJECT_SUCCESS
+  DELETE_PROJECT_SUCCESS,
+  DELETE_PROJECT_FAILURE,
+  CREATE_PROJECT_FAILURE
 } from '../actions';
 import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { PROJECTS_PATH } from '../constants';
 import queryString from 'query-string';
 import { Dependencies } from '../../models';
-import { getRidAsId } from '../../helpers';
+import { getRidAsId, showError } from '../../helpers';
 
 export function loadProjectsEpic(action$: Observable<Action>, store: Store, { history, axios }: Dependencies) {
   return action$.pipe(
@@ -92,6 +94,22 @@ export function navigateToProjectsOnSuccessEpic(action$: Observable<Action>, sto
     tap(() => {
       history.push(PROJECTS_PATH);
     }),
+    ignoreElements()
+  );
+}
+
+export function deleteProjectToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(DELETE_PROJECT_FAILURE),
+    tap(() => showError('Error while deleting project')),
+    ignoreElements()
+  );
+}
+
+export function createProjectToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(CREATE_PROJECT_FAILURE),
+    tap(() => showError('Error while creating project')),
     ignoreElements()
   );
 }

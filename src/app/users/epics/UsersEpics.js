@@ -16,12 +16,15 @@ import {
   deleteUserSuccess,
   deleteUserFailure,
   CREATE_USER_SUCCESS,
-  DELETE_USER_SUCCESS
+  DELETE_USER_SUCCESS,
+  CREATE_USER_FAILURE,
+  DELETE_USER_FAILURE
 } from '../actions';
 import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { USERS_PATH } from '../constants';
 import queryString from 'query-string';
 import { Dependencies } from '../../models';
+import { showError } from '../../helpers';
 
 export function loadUsersEpic(action$: Observable<Action>, store: Store, { history, axios }: Dependencies) {
   return action$.pipe(
@@ -90,6 +93,22 @@ export function navigateToUsersOnSuccessEpic(action$: Observable<Action>, store:
     tap(() => {
       history.push(USERS_PATH);
     }),
+    ignoreElements()
+  );
+}
+
+export function createUserToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(CREATE_USER_FAILURE),
+    tap(() => showError('Error while creating user')),
+    ignoreElements()
+  );
+}
+
+export function deleteUserToastEpic(action$: Observable<Action>, store: Store) {
+  return action$.pipe(
+    ofType(DELETE_USER_FAILURE),
+    tap(() => showError('Error while deleting user')),
     ignoreElements()
   );
 }
