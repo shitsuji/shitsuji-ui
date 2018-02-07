@@ -12,3 +12,4 @@ export * from './DependenciesList';
 export * from './ApplicationSelect';
 export * from './ApplicationSelectWithApplications';
 export * from './WithApplications';
+export * from './DependenciesForm';

@@ -20,18 +20,22 @@ import {
 import { exhaustMap, map, tap, ignoreElements } from 'rxjs/operators';
 import { APPLICATIONS_PATH } from '../constants';
 import { Dependencies } from '../../models';
-import { showError } from '../../helpers';
+import { showError, getRidAsId } from '../../helpers';
 
 export function createVersionEpic(action$: Observable<Action>, store: Store, { axios }: Dependencies) {
   return action$.pipe(
     ofType(CREATE_VERSION_REQUEST),
     map((action: CreateVersionRequestAction) => action.payload),
-    exhaustMap(async ({ applicationId, version }) => {
+    exhaustMap(async ({ applicationId, version, dependencies }) => {
       try {
         const res = await axios.post(`/applications/${applicationId}/versions`, version);
+        const versionId = getRidAsId(res.data);
+
+        const dependees = await axios.put(`/versions/${versionId}/dependees`, dependencies);
 
         return createVersionSuccess({
           version: res.data,
+          dependees: dependees.data,
           applicationId
         });
       } catch (e) {

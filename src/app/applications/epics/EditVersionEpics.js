@@ -20,11 +20,16 @@ export function editVersionEpic(action$: Observable<Action>, store: Store, { axi
   return action$.pipe(
     ofType(EDIT_VERSION_REQUEST),
     map((action: EditVersionRequestAction) => action.payload),
-    exhaustMap(async ({ applicationId, version }) => {
-      try {
-        const res = await axios.patch(`/versions/${getRidAsId((version))}`, version);
+    exhaustMap(async ({ applicationId, version, dependencies }) => {
+      const versionId = getRidAsId((version));
 
-        return editVersionSuccess({ applicationId, version: res.data });
+      try {
+        const [ res, dependees ] = await Promise.all([
+          axios.patch(`/versions/${versionId}`, version),
+          axios.put(`/versions/${versionId}/dependees`, dependencies)
+        ]);
+
+        return editVersionSuccess({ applicationId, version: res.data, dependees: dependees.data });
       } catch (e) {
         return editVersionFailure(e);
       }

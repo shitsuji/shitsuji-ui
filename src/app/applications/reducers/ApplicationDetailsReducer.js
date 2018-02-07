@@ -70,10 +70,16 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
     }
 
     const versions = [...state.versions, payload.version];
+    const versionId = getRidAsId(payload.version);
+    let dependees = state.dependees;
+    if (versionId === state.selectedVersionId) {
+      dependees = payload.dependees;
+    }
 
     return {
       ...state,
-      versions
+      versions,
+      dependees
     };
   },
   [DELETE_APPLICATION_REQUEST]: (state) => ({
@@ -151,13 +157,18 @@ export const applicationDetailsReducer = reducer(APPLICATION_DETAILS_INITIAL_STA
         pending: false
       };
     }
-
+    
     const versionId = getRidAsId(payload.version);
     const versions = state.versions && state.versions.map((v) => getRidAsId(v) === versionId ? payload.version : v);
+    let dependees = state.dependees;
+    if (versionId === state.selectedVersionId) {
+      dependees = payload.dependees;
+    }
 
     return {
       ...state,
       versions,
+      dependees,
       pending: false
     };
   },

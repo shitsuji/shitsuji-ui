@@ -2,11 +2,11 @@
 import React from 'react';
 import { Dispatch, compose } from 'redux';
 import { connect } from 'react-redux';
-import { Application, Version } from '../models';
-import { editVersionRequest } from '../actions';
+import { Application, Version, Dependency } from '../models';
+import { editVersionRequest, selectVersionRequest } from '../actions';
 import { Segment, Header, Grid, Button, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { APPLICATIONS_PATH } from '../index';
+import { APPLICATIONS_PATH } from '../constants';
 import { RootState } from '../../models';
 import { WithLoader } from '../../shared';
 import { getRidAsId } from '../../helpers';
@@ -17,8 +17,11 @@ import { VersionForm } from '../components';
 export interface EditVersionProps {
   application: Application;
   versions: Version[];
+  dependees: Dependency[];
   pending: boolean;
   match: match<{ versionId: string }>;
+  selectedVersionId: string;
+  selectVersion: (version: Version) => void;
   editVersion: (payload: { version: Version, applicationId: string }) => void;
 }
 
@@ -27,15 +30,18 @@ export interface EditVersionState {
 }
 
 function mapStateToProps({ applicationDetails }: RootState) {
-  const { application, versions, pending } = applicationDetails;
+  const { application, versions, pending, dependees, selectedVersionId } = applicationDetails;
 
-  return { application, versions, pending };
+  return { application, versions, pending, dependees, selectedVersionId };
 }
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    editVersion(payload: { version: Version, applicationId: string }) {
+    editVersion(payload: { version: Version, applicationId: string, dependencies: Dependency[] }) {
       return dispatch(editVersionRequest(payload));
+    },
+    selectVersion: (version: Version) => {
+      return dispatch(selectVersionRequest(version));
     }
   };
 }
@@ -56,6 +62,12 @@ export const EditVersion = enhance(
       this.state = { version };
     }
 
+    componentDidMount() {
+      if (!this.props.selectedVersionId && this.state.version) {
+        this.props.selectVersion(this.state.version);
+      }
+    }
+
     componentWillReceiveProps() {
       if (!this.props.versions) {
         return;
@@ -67,10 +79,10 @@ export const EditVersion = enhance(
       this.setState({ version });
     }
 
-    editVersion(version: Version) {
+    editVersion(payload: { version: Version, dependencies: Dependency }) {
       const applicationId = getRidAsId(this.props.application);
 
-      this.props.editVersion({ version, applicationId });
+      this.props.editVersion({ ...payload, applicationId });
     }
     
     render() {
@@ -93,8 +105,10 @@ export const EditVersion = enhance(
                   </Header>
 
                   <VersionForm
+                    dependencies={this.props.dependees}
+                    application={this.props.application}
                     version={version}
-                    onSubmit={(version) => this.editVersion(version)}
+                    onSubmit={(payload) => this.editVersion(payload)}
                   />
                 </Segment>
                 :

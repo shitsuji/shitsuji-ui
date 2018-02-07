@@ -1,7 +1,7 @@
 // @flow
 import { Action } from 'redux';
 import { actionCreator } from '../../helpers';
-import { Version } from '../models';
+import { Version, Dependency } from '../models';
 
 export const EDIT_VERSION_REQUEST = 'EDIT_VERSION_REQUEST';
 export const EDIT_VERSION_SUCCESS = 'EDIT_VERSION_SUCCESS';
@@ -11,6 +11,7 @@ export interface EditVersionRequestAction extends Action {
   payload: {
     version: Version;
     applicationId: string;
+    dependencies: Dependency[];
   };
 }
 
@@ -20,6 +21,7 @@ export interface EditVersionSuccessAction extends Action {
   payload: {
     version: Version;
     applicationId: string;
+    dependees: Dependency[];
   };
 }
 

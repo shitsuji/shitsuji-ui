@@ -4,7 +4,7 @@ import { VersionFormWithLoader } from '../components';
 import { RootState } from '../../models';
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import { VersionCreateData, ApplicationDetailsState } from '../models';
+import { VersionCreateData, ApplicationDetailsState, Dependency } from '../models';
 import { createVersionRequest } from '../actions';
 import { Segment, Header, Grid, Button, Icon } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -23,9 +23,9 @@ function mapStateToProps({ applicationDetails }: RootState) {
 
 function mapDispatchToProps(dispatch: Dispatch, props: CreateVersionProps) {
   return {
-    createVersion(version: VersionCreateData) {
+    createVersion(payload: { version: VersionCreateData, dependencies: Dependency[] }) {
       const { applicationId } = props.match.params;
-      return dispatch(createVersionRequest({ version, applicationId }));
+      return dispatch(createVersionRequest({ ...payload, applicationId }));
     }
   };
 }
@@ -34,7 +34,7 @@ export const CreateVersion = connect(mapStateToProps, mapDispatchToProps)(
   class extends React.PureComponent<CreateVersionProps> {
     render() {
       const { applicationId } = this.props.match.params;
-      const { pending } = this.props.applicationDetails;
+      const { pending, application } = this.props.applicationDetails;
 
       return (
         <Grid columns="1">
@@ -51,7 +51,7 @@ export const CreateVersion = connect(mapStateToProps, mapDispatchToProps)(
                 Create new version
               </Header>
 
-              <VersionFormWithLoader pending={pending} onSubmit={this.props.createVersion} />
+              <VersionFormWithLoader application={application} pending={pending} onSubmit={this.props.createVersion} />
             </Segment>
           </Grid.Column>
         </Grid>
