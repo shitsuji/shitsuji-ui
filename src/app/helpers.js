@@ -46,3 +46,13 @@ export function showError(text: string) {
     text
   }).show();
 }
+
+export function showSuccess(text: string) {
+  new Noty({
+    theme: 'metroui',
+    type: 'success',
+    timeout: DEFAULT_TOAST_TIMEOUT,
+    layout: 'bottomRight',
+    text
+  }).show();
+}

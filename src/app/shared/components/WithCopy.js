@@ -1,4 +1,5 @@
 import React from 'react';
+import { showSuccess, showError } from '../../helpers';
 
 function onCopy(text) {
   try {
@@ -8,13 +9,14 @@ function onCopy(text) {
     area.select();
     document.execCommand('copy');
     document.body.removeChild(area);
+    showSuccess('Copied to clipboard');
   } catch (e) {
-    console.error(e.message);
+    showError('Error while copying to clipboard');
   }
 }
 
 export function WithCopy(Component) {
   return function (props) {
-    return <Component {...{ ...props, onCopy }}/>
-  }
+    return <Component {...{ ...props, onCopy }}/>;
+  };
 }
