@@ -4,9 +4,6 @@ RUN rm /etc/nginx/conf.d/*.conf
 
 WORKDIR /usr/src
 COPY ./docker ./docker
+COPY ./build /var/www/html/app
 
 ENTRYPOINT ["/bin/sh", "docker/start.sh"]
-
-COPY ./build /var/www/hmtl/app
-
-RUN ["ls", "-la", "/var/www/hmtl"]
