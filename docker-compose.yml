@@ -1,0 +1,23 @@
+version: "3.4"
+
+services:
+  ui:
+    build: .
+    ports:
+      - "80:80"
+      - "443:443"
+    secrets:
+      - proxy_cert
+      - proxy_dhparam
+      - proxy_key
+    environment:
+      API_HOST: "${HOST_IP}"
+      API_PORT: 5000
+
+secrets:
+  proxy_cert:
+    file: ./docker/secrets/cert.crt
+  proxy_dhparam:
+    file: ./docker/secrets/dhparam.pem
+  proxy_key:
+    file: ./docker/secrets/key.pem
