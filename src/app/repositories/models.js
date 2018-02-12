@@ -11,6 +11,7 @@ export interface RepositoryCreateData {
 export interface Repository extends RepositoryCreateData, Record {
   createdAt: Date;
   publicKey: string;
+  key: string;
 }
 
 export interface RepositoriesState {

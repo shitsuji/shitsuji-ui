@@ -1,13 +1,14 @@
 // @flow
 import React from 'react';
-import { Segment, Header, Grid, Divider, Button, Icon, Popup } from 'semantic-ui-react';
+import { Segment, Header, Grid, Divider, Button, Icon, Popup, Input } from 'semantic-ui-react';
 import { Repository } from '../models';
-import { TextTruncate } from '../../shared';
+import { TextTruncate, WithCopy } from '../../shared';
 import { getRidAsId } from '../../helpers';
 import { Link } from 'react-router-dom';
 import { REPOSITORIES_PATH } from '../constants';
 import { Application, ApplicationsList } from '../../applications';
 import styled from 'styled-components';
+import { BASE_URL } from '../../constants';
 
 const PublicKeyWrapper = styled.div`
   background-color: #efefef;
@@ -18,6 +19,23 @@ const PublicKeyWrapper = styled.div`
 const KeyGrid = styled(Grid)`
   padding: 1rem 0 !important;
 `;
+
+interface UrlInputProps {
+  url: string;
+  onCopy: (url: string) => void;
+}
+
+const UrlInput = WithCopy(function (props: UrlInputProps) {
+  return (
+    <Input value={props.url} action actionPosition="left" fluid>
+      <Button icon labelPosition="left" onClick={() => props.onCopy(props.url)}>
+        <Icon name="copy" />
+        Copy URI
+      </Button>
+      <input disabled />
+    </Input>
+  );
+});
 
 export interface RepositoryContentProps {
   repository: Repository;
@@ -85,6 +103,17 @@ export function RepositoryContent(props: RepositoryContentProps) {
                 {repository.url}
               </Header.Subheader>
             </Header>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width="16">
+            <Header as="h3">
+              Repository webhook URI
+            </Header>
+          </Grid.Column>
+
+          <Grid.Column width="16">
+            <UrlInput url={`${BASE_URL}/webhook/${repository.key}`} />
           </Grid.Column>
         </Grid.Row>
         <Grid.Row>
